@@ -1,0 +1,23 @@
+// echo                              1
+
+// echo -n                           2
+// echo message                      2
+
+// echo -n message                   3
+// echo redirect file_name           3
+
+// echo -n redirect file_name        4
+// echo meggase rdirect file_name    4
+
+// echo -n meggase rdirect file_name 5
+
+
+signals
+
+pipes
+export (handle dounble variable and add (="") to empty vars)
+env (done?)
+unsethaha
+haha
+haha
+haha
