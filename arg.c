@@ -40,7 +40,7 @@ t_arg	*ft_arglast(t_arg *lst)
 	return (lst);
 }
 
-t_arg * newarg_token(char *cmd, e_type type)
+t_arg * newarg_token(char *cmd, t_type type)
 {
 	t_arg *node;
 
@@ -68,7 +68,7 @@ void	ft_argadd_back(t_arg **lst, t_arg *new)
 		}
 	}
 }
- 
+
 void	append_word(t_token **tmp, t_arg **arg)
 {
 		while ((*tmp) && (*tmp)->type == tokenword)

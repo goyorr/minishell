@@ -11,23 +11,22 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-void	all_cmd(char **cmd, t_list *export_list, t_list *env_list, int pi)
+void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list, int pi)
 {
-	if (!ft_strncmp(cmd[0], "pwd\0", 4))
+	if (!ft_strncmp(cmd->cmd, "pwd\0", 4))
 		my_pwd(cmd, pi);
-	else if (!ft_strncmp(cmd[0], "exit\0", 5))
+	else if (!ft_strncmp(cmd->cmd, "exit\0", 5))
 		my_exit();
-	else if (!ft_strncmp(cmd[0], "echo\0", 5))
+	else if (!ft_strncmp(cmd->cmd, "echo\0", 5))
 		my_echo(cmd, pi);
-	else if (!ft_strncmp(cmd[0], "cd\0", 3))
-		my_cd(cmd[1], pi);
-	else if (!ft_strncmp(cmd[0], "env\0", 4))
+	else if (!ft_strncmp(cmd->cmd, "cd\0", 3))
+		my_cd(cmd);
+	else if (!ft_strncmp(cmd->cmd, "env\0", 4))
 		my_env(env_list, pi);
-	else if (!ft_strncmp(cmd[0], "export\0", 6)
-		|| !ft_strncmp(cmd[0], "export ", 6))
-		my_export(export_list, env_list, cmd[1], pi);
-	else if (!ft_strncmp(cmd[0], "unset\0", 6))
-		my_unset(env_list, pi);
+	else if (!ft_strncmp(cmd->cmd, "export\0", 6))
+		my_export(export_list, env_list, cmd->arg[1], pi);
+	else if (!ft_strncmp(cmd->cmd, "unset\0", 6))
+		my_unset(env_list);
 	else
 		my_exec_cmd(cmd, pi);
 }
@@ -38,6 +37,7 @@ int	main(int ac, char **av, char *env[])
 	t_list	*export_list;
 	char	*str;
 	int		i;
+	char	*tmp;
 
 	(void)av;
 	(void)ac;
@@ -52,11 +52,10 @@ int	main(int ac, char **av, char *env[])
 	while (1)
 	{
 		str = readline("\e[0;32mminishell ➜ \e[m");
-
 		if (str[0])
 		{
 			add_history(str);
-			char *tmp = malloc(sizeof(char) * ft_strlen(str) + 1);
+			tmp = malloc(sizeof(char) * ft_strlen(str) + 1);
 			ft_strlcpy(tmp, str, ft_strlen(str) + 1);
 			if (ft_parsing(tmp) == 0 || token_line(str, export_list, env_list) ==  0)
 			{

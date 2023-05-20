@@ -11,18 +11,17 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-// echo redirect file_name
-void	my_echo1(char **cmd, int pi)
+void	my_echo1(t_arg *cmd, int pi)
 {
 	int	file_d;
 	int	save_out;
 
 	save_out = 0;
 	file_d = 0;
-	if (cmd[1][1] == '>')
-		file_d = open(cmd[2], O_CREAT | O_RDWR | O_APPEND);
+	if (pi == APND)
+		file_d = open(cmd->next->redfile, O_CREAT | O_RDWR | O_APPEND);
 	else
-		file_d = open(cmd[2], O_CREAT | O_RDWR | O_TRUNC);
+		file_d = open(cmd->next->redfile, O_CREAT | O_RDWR | O_TRUNC);
 	save_out = dup(fileno(stdout));
 	dup2(file_d, 1);
 	ft_putendl_fd("", file_d);
@@ -30,88 +29,103 @@ void	my_echo1(char **cmd, int pi)
 	close(file_d);
 }
 
-// echo -n redirect file_name
-void	my_echo2(char **cmd, int pi)
+void	my_echo2(t_arg *cmd, int pi)
 {
 	int	file_d;
 	int	save_out;
+	int	i;
 
 	save_out = 0;
 	file_d = 0;
-	if (cmd[2][1] == '>')
-		file_d = open(cmd[3], O_CREAT | O_RDWR | O_APPEND);
+	if (pi == APND)
+		file_d = open(cmd->next->redfile, O_CREAT | O_RDWR | O_APPEND);
 	else
-		file_d = open(cmd[3], O_CREAT | O_RDWR | O_TRUNC);
+		file_d = open(cmd->next->redfile, O_CREAT | O_RDWR | O_TRUNC);
 	save_out = dup(fileno(stdout));
 	dup2(file_d, 1);
-	ft_putstr_fd("", file_d);
+	{			
+		i = 1;
+		while (cmd->arg[i])
+		{
+			ft_putstr_fd(cmd->arg[i], file_d);
+			if (cmd->arg[i + 1])
+				ft_putstr_fd(" ", file_d);
+			i++;
+		}
+		ft_putstr_fd("\n", file_d);
+	}
 	dup2(save_out, fileno(stdout));
 	close(file_d);
 }
 
-// echo meggase rdirect file_name
-void	my_echo3(char **cmd, int pi)
+void	my_echo3(t_arg *cmd, int pi)
 {
 	int	file_d;
 	int	save_out;
+	int	i;
 
 	save_out = 0;
 	file_d = 0;
-	if (cmd[2][1] == '>')
-		file_d = open(cmd[3], O_CREAT | O_RDWR | O_APPEND);
+	if (pi == APND)
+		file_d = open(cmd->next->redfile, O_CREAT | O_RDWR | O_APPEND);
 	else
-		file_d = open(cmd[3], O_CREAT | O_RDWR | O_TRUNC);
+		file_d = open(cmd->next->redfile, O_CREAT | O_RDWR | O_TRUNC);
 	save_out = dup(fileno(stdout));
 	dup2(file_d, 1);
-	ft_putendl_fd(cmd[1], file_d);
+	i = 2;
+	while (cmd->arg[i])
+	{
+		ft_putstr_fd(cmd->arg[i], file_d);
+		if (cmd->arg[i + 1])
+			ft_putstr_fd(" ", file_d);
+		i++;
+	}
 	dup2(save_out, fileno(stdout));
 	close(file_d);
 }
 
-// echo -n meggase rdirect file_name
-void	my_echo4(char **cmd, int pi)
+void	my_echo4(t_arg *cmd)
 {
-	int	file_d;
-	int	save_out;
+	int	i;
 
-	save_out = 0;
-	file_d = 0;
-	if (cmd[3][1] == '>')
-		file_d = open(cmd[4], O_CREAT | O_RDWR | O_APPEND);
+	if (!ft_strncmp(cmd->arg[1], "-n\0", 3))
+	{
+		i = 1;
+		while (cmd->arg[++i])
+		{
+			printf("%s", cmd->arg[i]);
+			if (cmd->arg[i + 1])
+				printf(" ");
+		}
+	}
 	else
-		file_d = open(cmd[4], O_CREAT | O_RDWR | O_TRUNC);
-	save_out = dup(fileno(stdout));
-	dup2(file_d, 1);
-	ft_putstr_fd(cmd[2], file_d);
-	dup2(save_out, fileno(stdout));
-	close(file_d);
-}
-
-void	my_echo(char **cmd, int pi)
-{
-	if (!cmd[1])
+	{
+		i = 0;
+		while (cmd->arg[++i])
+		{
+			printf("%s", cmd->arg[i]);
+			if (cmd->arg[i + 1])
+				printf(" ");
+		}
 		printf("\n");
-	else if (!cmd[2])
-	{
-		if (!ft_strncmp(cmd[1], "-n\0", 3))
-			printf("");
-		else
-			printf("%s\n", cmd[1]);
 	}
-	else if (!cmd[3])
+}
+
+void	my_echo(t_arg *cmd, int pi)
+{
+	if (pi == NOR)
+		my_echo4(cmd);
+	else if (pi == APND || pi == TRNC)
 	{
-		if (!ft_strncmp(cmd[1], "-", 1))
-			printf("%s", cmd[2]);
-		else
+		if (!cmd->arg[1])
 			my_echo1(cmd, pi);
-	}
-	else if (!cmd[4])
-	{
-		if (!ft_strncmp(cmd[1], "-", 1))
-			my_echo2(cmd, pi);
 		else
-			my_echo3(cmd, pi);
+		{
+			if (!ft_strncmp(cmd->arg[1], "-n\0", 3))
+				my_echo3(cmd, pi);
+			else
+				my_echo2(cmd, pi);
+		}
 	}
-	else if (!cmd[5])
-		my_echo4(cmd, pi);
+	// else if (pi == PIPE)
 }

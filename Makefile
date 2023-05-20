@@ -21,7 +21,7 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra 
+CFLAGS = -Wall -Wextra
 
 all: libftm ${NAME}
 

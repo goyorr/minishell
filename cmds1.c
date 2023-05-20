@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
-void	my_cd(char *cmd, int pi)
+void	my_cd(t_arg *cmd)
 {
-	chdir(cmd);
+	chdir(cmd->arg[1]);
 }
 
 void	my_env(t_list *env_list, int pi)
@@ -62,7 +62,7 @@ void	my_export(t_list *export_list, t_list *env_list, char *var, int pi)
 }
 
 //???????????????
-void	my_unset(t_list *env_list, int pi)
+void	my_unset(t_list *env_list)
 {
 	printf("%s\n", env_list->content);
 }

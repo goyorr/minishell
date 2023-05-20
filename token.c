@@ -35,17 +35,19 @@ char *append_char(char *str, char c)
 
 int check_token(char c)
 {
-	if (c == '|')
+	if (c == '|' || c == '<' || c == '>')
 		return 1;
 	return 0;
 }
 
-e_type get_type(char *str)
+t_type get_type(char *str)
 {
 	if (!str)
 		return (NONE);
 	if (!ft_strncmp(str, "|", 1))
 		return (tokenpipe);
+	else if (!ft_strncmp(">", str, 1) || !ft_strncmp("<", str, 1))
+		return (redirections);
 	return (tokenword);
 }
 
