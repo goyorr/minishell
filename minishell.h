@@ -39,7 +39,7 @@
 # define APND 4
 # define TRNC 5
 
-int	g_fd[2];
+int	g_fd[3][2];
 
 typedef enum type{
 	tokenword,
@@ -54,6 +54,7 @@ typedef struct s_arg{
 	char			**arg;
 	t_type			type;
 	struct s_arg	*next;
+	int				t_pipes;
 }	t_arg;
 
 typedef struct s_token{
@@ -79,9 +80,9 @@ void	my_cd(t_arg *cmd);
 void	my_env(t_list *env, int pi);//redirect
 void	my_unset(t_list *env);
 void	my_exec_cmd(t_arg *cmd, int pi);
-void	my_exec_cmd_a1(t_arg *cmd, int pi);
-void	my_exec_cmd_b1(t_arg *cmd, int pi);
-void	my_exec_cmd_c1(t_arg *cmd, int pi);
+void	my_exec_cmd_a1(t_arg *cmd, int pi, int current_pipe);
+void	my_exec_cmd_b1(t_arg *cmd, int pi, int current_pipe);
+void	my_exec_cmd_c1(t_arg *cmd, int pi, int current_pipe);
 void	my_exec_cmd_c2(t_arg *cmd, int pi);
 void	my_exec_cmd_d1(t_arg *cmd, int pi);
 void	my_exec_cmd_e1(t_arg *cmd, int pi);

@@ -85,14 +85,17 @@ void	my_exec_cmd_d1(t_arg *cmd, int pi)
 
 void	my_exec_cmd(t_arg *cmd, int pi)
 {
+	static int current_pipe = -1;
 	if (pi == NOR || pi == PIPE ||pi == FPIPE ||pi == EPIPE)
 	{
+		if (pi != NOR)
+			current_pipe++;
 		if (!cmd->arg[1])
-			my_exec_cmd_a1(cmd, pi);
+			my_exec_cmd_a1(cmd, pi, current_pipe);
 		else if (!cmd->arg[2])
-			my_exec_cmd_b1(cmd, pi);
+			my_exec_cmd_b1(cmd, pi, current_pipe);
 		else
-			my_exec_cmd_c1(cmd, pi);
+			my_exec_cmd_c1(cmd, pi, current_pipe);
 	}
 	else if (pi == APND || pi == TRNC)
 	{

@@ -89,19 +89,34 @@ int  token_line(char *line, t_list *export_list, t_list *env_list)
 		return(0);
 	}
 	is_arg(token, &arg);
+	int num_pipes = 0;
+	t_arg *tmp = arg;
+	while(arg->next)
+	{
+		if(arg->cmd[0] == '|')
+			num_pipes++;
+		arg = arg->next;
+	}
+	arg = tmp;
 	while(arg)
 	{
 		if (arg->cmd[0] == '>' || arg->cmd[0] == '|')
 			arg = arg->next;
 		else if (arg->next && arg->next->arg[0][0] == '|')
 		{
-			pipe(g_fd);
 			//only redirect output to fd[1]
+			arg->t_pipes = num_pipes;
+			while (num_pipes >= 0)
+			{
+				pipe(g_fd[num_pipes]);
+				num_pipes--;
+			}
 			all_cmd(arg, export_list, env_list, FPIPE);
-			arg = arg->next;
 			arg = arg->next;
 			while (arg)
 			{
+				if (arg->next)
+					arg->next->t_pipes = arg->t_pipes;
 				if (arg->cmd[0] == '|' || arg->cmd[0] == '>')
 					arg = arg->next;
 				else if (arg->next && arg->next->arg[0][0] == '>')
