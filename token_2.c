@@ -12,6 +12,33 @@
 
 #include "minishell.h"
 
+int	get_next_pip(t_arg *arg)
+{
+	int c;
+
+	c = 0;
+	while (arg)
+	{
+		if (arg->cmd[0] == '|')
+			c++;
+		arg = arg->next;
+	}
+	return(c);
+}
+
+int	get_next_red(t_arg *arg)
+{
+	int c;
+
+	c = 0;
+	while (arg)
+	{
+		if (arg->cmd[0] == '>')
+			c++;
+		arg = arg->next;
+	}
+	return(c);
+}
 
 t_token * new_token(char *cmd, t_type type)
 {
@@ -39,7 +66,9 @@ int is_char(char c)
 char *get_token(char *line)
 {
 	int i;
-
+	
+	if (!line)
+		return (NULL);
 	i = 0;
 	if (line[i] && (line[i] == '|' || line[i] == '<' || line[i] == '>') 
 		&& (line[i + 1] != '<' && line[i + 1] != '>'))
@@ -57,7 +86,7 @@ void	is_token(t_data *data, char *line)
 			(data->i)++;
 }
 
-int  token_line(char *line, t_list *export_list, t_list *env_list)
+int	token_line(char *line, t_list *export_list, t_list *env_list)
 {
 	t_data *data;
 	t_arg *arg;
@@ -86,75 +115,9 @@ int  token_line(char *line, t_list *export_list, t_list *env_list)
 	if (ft_parsing_2(&token) == 0)
 	{
 		free_list(token);
-		return(0);
+		return (0);
 	}
 	is_arg(token, &arg);
-	int num_pipes = 0;
-	t_arg *tmp = arg;
-	while(arg->next)
-	{
-		if(arg->cmd[0] == '|')
-			num_pipes++;
-		arg = arg->next;
-	}
-	arg = tmp;
-	while(arg)
-	{
-		if (arg->cmd[0] == '>' || arg->cmd[0] == '|')
-			arg = arg->next;
-		else if (arg->next && arg->next->arg[0][0] == '|')
-		{
-			//only redirect output to fd[1]
-			arg->t_pipes = num_pipes;
-			while (num_pipes >= 0)
-			{
-				pipe(g_fd[num_pipes]);
-				num_pipes--;
-			}
-			all_cmd(arg, export_list, env_list, FPIPE);
-			arg = arg->next;
-			while (arg)
-			{
-				if (arg->next)
-					arg->next->t_pipes = arg->t_pipes;
-				if (arg->cmd[0] == '|' || arg->cmd[0] == '>')
-					arg = arg->next;
-				else if (arg->next && arg->next->arg[0][0] == '>')
-				{
-					if (arg->next->arg[0][1] == '\0')
-						all_cmd(arg, export_list, env_list, TRNC);
-					else
-						all_cmd(arg, export_list, env_list, APND);
-					arg = arg->next;
-				}
-				else if (!arg->next)
-				{
-					//read from fd[0] and output normaly
-					all_cmd(arg, export_list, env_list, EPIPE);
-					arg = arg->next;
-				}
-				else
-				{
-					//redirect output to stdin and read from fd[0]
-					all_cmd(arg, export_list, env_list, PIPE);
-					arg = arg->next;
-				}
-			}
-		}
-		else if (arg->next && arg->next->arg[0][0] == '>')
-		{
-			if (arg->next->arg[0][1] == '\0')
-				all_cmd(arg, export_list, env_list, TRNC);
-			else
-				all_cmd(arg, export_list, env_list, APND);
-			arg = arg->next;
-		}
-		else
-		{
-			all_cmd(arg, export_list, env_list, NOR);
-			arg = arg->next;
-		}
-	}
+	execute(arg, export_list, env_list);
 	return (1);
 }
-

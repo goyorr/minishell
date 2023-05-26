@@ -12,7 +12,7 @@
 
 NAME = minishell
 
-SRC = minishell.c signals.c cmds1.c cmds2.c cmds3.c cmds4.c cmds5.c arg.c parsing_2.c parsing.c token_2.c token.c
+SRC = minishell.c signals.c cmds1.c cmds2.c cmds3.c cmds4.c arg.c parsing_2.c parsing.c token_2.c token.c
 OBJ = ${SRC:.c=.o}
 
 libfta = ./libft/libft.a

@@ -31,15 +31,11 @@
 # include <term.h>
 # include "libft/libft.h"
 # include <string.h>
+# include <sys/errno.h>
 
-# define NOR 0
 # define PIPE 1
-# define FPIPE 2
-# define EPIPE 3
-# define APND 4
-# define TRNC 5
-
-int	g_fd[3][2];
+# define APND 2
+# define TRNC 3
 
 typedef enum type{
 	tokenword,
@@ -70,27 +66,18 @@ typedef struct s_data
 }	t_data;
 
 /*---commands---*/
-void	all_cmd(t_arg *cmd, t_list *export_list,
-			t_list *env_list, int pi);
-void	my_export(t_list *export_list, t_list *env_list,
-			char *var, int pi);
-void	my_pwd(t_arg *cmd, int pi);
+void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list);
+void	my_export(t_list *export_list, t_list *env_list, char *var);
+void	my_unset(t_arg *cmd, t_list *export_list, t_list *env_list);
+void	execute(t_arg *tmp, t_list *export_list, t_list *env_list);
+void	my_pwd(void);
 void	my_exit(void);
 void	my_cd(t_arg *cmd);
-void	my_env(t_list *env, int pi);//redirect
-void	my_unset(t_list *env);
-void	my_exec_cmd(t_arg *cmd, int pi);
-void	my_exec_cmd_a1(t_arg *cmd, int pi, int current_pipe);
-void	my_exec_cmd_b1(t_arg *cmd, int pi, int current_pipe);
-void	my_exec_cmd_c1(t_arg *cmd, int pi, int current_pipe);
-void	my_exec_cmd_c2(t_arg *cmd, int pi);
-void	my_exec_cmd_d1(t_arg *cmd, int pi);
-void	my_exec_cmd_e1(t_arg *cmd, int pi);
-void	my_echo(t_arg *cmd, int pi);
-void	my_echo1(t_arg *cmd, int pi);
-void	my_echo2(t_arg *cmd, int pi);
-void	my_echo3(t_arg *cmd, int pi);
-void	my_echo4(t_arg *cmd);
+void	my_env(t_list *env);
+void	my_echo(t_arg *cmd);
+int		get_next_pip(t_arg *arg);
+int		get_next_red(t_arg *arg);
+int		redirect(t_arg *tmp);
 
 /*---signals---*/
 void	sighandler(int signal);
