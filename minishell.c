@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:58 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/05/14 11:02:59 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/05/26 18:32:20 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -38,20 +38,58 @@ void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 	exit (0);
 }
 
-void	rd_line(t_list *export_list, t_list *env_list)
+int	check_line(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '\t')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	check_line_2(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i] != '\"'
+			&& str[i] != '\'' && str[i] != '\t')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	ft_read(t_list	*export_list, t_list *env_list)
 {
 	char	*tmp;
 	char	*str;
 
-	str = readline("\e[0;32mminishell ➜ \e[m");
-	if (str[0])
+	while (1)
 	{
+		rl_catch_signals = 0;
+		str = readline("\e[0;32mminishell ➜ \e[m");
+		if (parsing(str))
+			continue ;
 		add_history(str);
-		tmp = malloc(sizeof(char) * ft_strlen(str) + 1);
-		ft_strlcpy(tmp, str, ft_strlen(str) + 1);
-		if (!ft_parsing(tmp) || !token_line(str, export_list, env_list))
-			write(1, "syntax error\n", 13);
-		free(str);
+		if (str)
+		{
+			tmp = malloc(sizeof(char) * ft_strlen(str) + 1);
+			ft_strlcpy(tmp, str, ft_strlen(str) + 1);
+			if (ft_parsing(tmp) || token_line(str, export_list, env_list))
+			{
+				printf("\e[0;31msyntax error\n");
+				continue ;
+			}
+			free(str);
+		}
 	}
 }
 
@@ -59,17 +97,21 @@ int	main(int ac, char **av, char *env[])
 {
 	t_list	*env_list;
 	t_list	*export_list;
+	char	*str;
 	int		i;
 
 	(void)av;
 	(void)ac;
-	signal(3, sighandler);
+	str = NULL;
 	i = -1;
 	while (env[++i])
 		ft_lstadd_back(&env_list, ft_lstnew(env[i]));
 	i = -1;
 	while (env[++i])
 		ft_lstadd_back(&export_list, ft_lstnew(env[i]));
-	while (1)
-		rd_line(export_list, env_list);
+	i = -1;
+	signal(2, sighandler);
+	signal(3, sighandler);
+	signal(11, sighandler);
+	ft_read(export_list, env_list);
 }

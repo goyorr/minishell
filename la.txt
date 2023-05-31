@@ -1,4 +1,0 @@
-signals
-echo $?
-heredoc
-redirect input

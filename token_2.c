@@ -3,42 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaghbal <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 13:10:02 by aaghbal           #+#    #+#             */
-/*   Updated: 2023/05/09 13:10:04 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/05/26 18:29:55 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	get_next_pip(t_arg *arg)
-{
-	int c;
-
-	c = 0;
-	while (arg)
-	{
-		if (arg->cmd[0] == '|')
-			c++;
-		arg = arg->next;
-	}
-	return(c);
-}
-
-int	get_next_red(t_arg *arg)
-{
-	int c;
-
-	c = 0;
-	while (arg)
-	{
-		if (arg->cmd[0] == '>')
-			c++;
-		arg = arg->next;
-	}
-	return(c);
-}
+#include <readline/readline.h>
+#include <readline/history.h>
 
 t_token * new_token(char *cmd, t_type type)
 {
@@ -56,13 +30,6 @@ t_token * new_token(char *cmd, t_type type)
 }
 
 
-int is_char(char c)
-{
-	if (c == ' ' || c == '\t' || check_token(c))
-		return (1);
-	return(0);
-}
-
 char *get_token(char *line)
 {
 	int i;
@@ -79,6 +46,7 @@ char *get_token(char *line)
 	return NULL;
 }
 
+
 void	is_token(t_data *data, char *line)
 {
 	data->str = get_token(&line[(data->i)++]);
@@ -86,7 +54,26 @@ void	is_token(t_data *data, char *line)
 			(data->i)++;
 }
 
-int	token_line(char *line, t_list *export_list, t_list *env_list)
+void	ft_tokenization(t_token	**token, t_data *data, t_list *export_list, char *line)
+{
+	while (line[data->i])
+	{
+		while (line[(data->i)] == ' ' || line[(data->i)] == '\t')
+			(data->i)++;
+		if (check_token(line[data->i]))
+			is_token(data, line);
+		else if (line[data->i] == '\"')
+			data->str = double_quotes(line, data->str, &(data->i), export_list);
+		else if (line[data->i] == '\'')
+			data->str = single_quotes(line, data->str, &(data->i));
+		else
+			default_cmd(data, line, export_list);
+		if (data->str)
+			add_free(data, token);
+	}
+}
+
+int  token_line(char *line, t_list *export_list, t_list *env_list)
 {
 	t_data *data;
 	t_arg *arg;
@@ -97,27 +84,83 @@ int	token_line(char *line, t_list *export_list, t_list *env_list)
 	token = NULL;
 	data->i = 0;
 	data->str = NULL;
-	while (line[data->i])
-	{
-		while (line[(data->i)] == ' ' || line[(data->i)] == '\t')
-			(data->i)++;
-		if (check_token(line[data->i]))
-			is_token(data, line);
-		else if (line[data->i] == '\"')
-			data->str = double_quotes(line, data->str, &(data->i));
-		else if (line[data->i] == '\'')
-			data->str = single_quotes(line, data->str, &(data->i));
-		else
-			default_cmd(data, line);
-		if (data->str)
-			add_free(data, &token);
-	}
-	if (ft_parsing_2(&token) == 0)
+	ft_tokenization(&token, data, export_list, line);
+	if (ft_parsing_2(&token))
 	{
 		free_list(token);
-		return (0);
+		return(1);
 	}
 	is_arg(token, &arg);
 	execute(arg, export_list, env_list);
-	return (1);
+	return(0);
 }
+
+	// while (arg)
+	// {
+
+	// }
+	
+	// // while(arg->next)
+	// {
+	// 	if(arg->cmd[0] == '|')
+	// 		num_pipes++;
+	// 	arg = arg->next;
+	// }
+	// arg = tmp;
+	// while(arg)
+	// {
+	// 	if (arg->cmd[0] == '>' || arg->cmd[0] == '|')
+	// 		arg = arg->next;
+	// 	else if (arg->next && arg->next->arg[0][0] == '|')
+	// 	{
+	// 		//only redirect output to fd[1]
+	// 		arg->t_pipes = num_pipes;
+	// 		while (num_pipes >= 0)
+	// 		{
+	// 			pipe(g_fd[num_pipes]);
+	// 			num_pipes--;
+	// 		}
+	// 		all_cmd(arg, export_list, env_list, FPIPE);
+	// 		arg = arg->next;
+	// 		while (arg)
+	// 		{
+	// 			if (arg->next)
+	// 				arg->next->t_pipes = arg->t_pipes;
+	// 			if (arg->cmd[0] == '|' || arg->cmd[0] == '>')
+	// 				arg = arg->next;
+	// 			else if (arg->next && arg->next->arg[0][0] == '>')
+	// 			{
+	// 				if (arg->next->arg[0][1] == '\0')
+	// 					all_cmd(arg, export_list, env_list, TRNC);
+	// 				else
+	// 					all_cmd(arg, export_list, env_list, APND);
+	// 				arg = arg->next;
+	// 			}
+	// 			else if (!arg->next)
+	// 			{
+	// 				//read from fd[0] and output normaly
+	// 				all_cmd(arg, export_list, env_list, EEPIPE);
+	// 				arg = arg->next;
+	// 			}
+	// 			else
+	// 			{
+	// 				//redirect output to stdin and read from fd[0]
+	// 				all_cmd(arg, export_list, env_list, PIPE);
+	// 				arg = arg->next;
+	// 			}
+	// 		}
+	// 	}
+	// 	else if (arg->next && arg->next->arg[0][0] == '>')
+	// 	{
+	// 		if (arg->next->arg[0][1] == '\0')
+	// 			all_cmd(arg, export_list, env_list, TRNC);
+	// 		else
+	// 			all_cmd(arg, export_list, env_list, APND);
+	// 		arg = arg->next;
+	// 	}
+	// 	else
+	// 	{
+	// 		all_cmd(arg, export_list, env_list, NOR);
+	// 		arg = arg->next;
+	// 	}
+	// }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmds5.c                                            :+:      :+:    :+:   */
+/*   cmds3.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/16 06:33:10 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/05/16 06:33:11 by zel-kach         ###   ########.fr       */
+/*   Created: 2023/05/14 11:02:04 by zel-kach          #+#    #+#             */
+/*   Updated: 2023/05/26 21:36:02 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -42,9 +42,11 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 {
 	int			fd[2];
 	static int	s;
+	int			pid;
 
 	pipe(fd);
-	if (!fork())
+	pid = fork();
+	if (pid == 0)
 	{
 		if (tmp->next && tmp->next->cmd[0] == '|')
 			dup2(fd[1], 1);
@@ -65,6 +67,8 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 		s = dup(fd[0]);
 		close_file(file_d, fd);
 	}
+	if (tmp->next == NULL)
+		waitpid(pid, &g_ext_s, 0);
 }
 
 void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
@@ -72,7 +76,9 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 	while (tmp)
 	{
 		if (tmp->cmd[0] == '|' || tmp->cmd[0] == '>')
+		{
 			tmp = tmp->next;
+		}
 		else if (!ft_strncmp(tmp->cmd, "exit\0", 5))
 			my_exit();
 		else

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   cmds4.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/26 08:55:01 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/05/26 08:55:07 by zel-kach         ###   ########.fr       */
+/*   Created: 2023/05/14 11:02:09 by zel-kach          #+#    #+#             */
+/*   Updated: 2023/05/26 16:44:48 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 int	redirect(t_arg *tmp)
@@ -21,4 +22,17 @@ int	redirect(t_arg *tmp)
 		file_d = open(tmp->next->redfile, O_CREAT | O_RDWR | O_APPEND);
 	dup2(file_d, 1);
 	return (file_d);
+}
+
+int	parsing(char *str)
+{
+	if (check_line(str))
+		return (1);
+	if (check_line_2(str))
+	{
+		free(str);
+		printf("\e[0;31mminishell : command not found\n");
+		return (1);
+	}
+	return (0);
 }

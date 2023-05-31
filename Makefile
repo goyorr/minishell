@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: zel-kach <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/14 04:51:47 by zel-kach          #+#    #+#              #
-#    Updated: 2023/05/14 04:51:48 by zel-kach         ###   ########.fr        #
+#    Updated: 2023/05/26 19:01:30 by aaghbal          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRC = minishell.c signals.c cmds1.c cmds2.c cmds3.c cmds4.c arg.c parsing_2.c parsing.c token_2.c token.c
+SRC = minishell.c cmds1.c cmds2.c cmds3.c cmds4.c arg.c parsing_2.c parsing.c token_2.c token.c utils.c signals.c
 OBJ = ${SRC:.c=.o}
 
 libfta = ./libft/libft.a
@@ -21,13 +21,12 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -Werror -I /Users/zel-kach/.brew/opt/readline/include
 
 all: libftm ${NAME}
 
 ${NAME}: ${OBJ}
-		${CC} ${OBJ} ${libfta} -lreadline -o $@
-
+		${CC} ${OBJ} ${libfta} -L /Users/zel-kach/.brew/opt/readline/lib -lreadline -o $@ 
 %.o: %.c minishell.h ${libfta}
 		${CC} ${CFLAGS} -c $<
 
