@@ -38,6 +38,22 @@ void	multi_red(t_arg *tmp)
 	}
 }
 
+void	here_doc(t_arg *tmp, int fd[2])
+{
+	signal(11, doc_handler);
+	signal(2, doc_handler);
+	char *delimiter = ft_strdup(tmp->next->redfile);
+	char *input = readline(">");
+	while (1)
+	{
+		if (!ft_strncmp(delimiter, input, ft_strlen(input)) && (ft_strlen(input) == ft_strlen(delimiter)))
+			break ;
+		ft_putendl_fd(input, fd[1]);
+		input = readline(">");
+	}
+	close(fd[1]);
+}
+
 void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 {
 	int			fd[2];
@@ -52,6 +68,13 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 			dup2(fd[1], 1);
 		else if (tmp->next && tmp->next->cmd[0] == '>')
 			file_d = redirect(tmp);
+		else if (tmp->next && !ft_strncmp(tmp->next->cmd, "<<\0", 3))
+		{
+			s = -1;
+			here_doc(tmp, fd);
+			dup2(fd[0], 0);
+			all_cmd(tmp, export_list, env_list);
+		}
 		if (s > 0)
 		{
 			dup2(s, 0);
@@ -75,10 +98,8 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 {
 	while (tmp)
 	{
-		if (tmp->cmd[0] == '|' || tmp->cmd[0] == '>')
-		{
+		if (tmp->cmd[0] == '|' || tmp->cmd[0] == '>' || tmp->cmd[0] == '<')
 			tmp = tmp->next;
-		}
 		else if (!ft_strncmp(tmp->cmd, "exit\0", 5))
 			my_exit();
 		else

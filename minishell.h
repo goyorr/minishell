@@ -33,7 +33,6 @@
 # include "libft/libft.h"
 # include <string.h>
 # include <sys/errno.h>
-# include "/Users/zel-kach/.brew/opt/readline/include/readline/chardefs.h"
 
 # define NOR 0
 # define PIPE 1
@@ -94,6 +93,7 @@ void	my_echo3(t_arg *cmd, int pi);
 void	my_echo4(t_arg *cmd);
 void	my_env(t_list *env_list);
 int		redirect(t_arg *tmp);
+void	doc_handler(int signal);
 
 /*---signals---*/
 void	sighandler(int signal);
