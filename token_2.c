@@ -6,9 +6,10 @@
 /*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 13:10:02 by aaghbal           #+#    #+#             */
-/*   Updated: 2023/05/26 18:29:55 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/06/13 13:36:46 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 t_token * new_token(char *cmd, t_type type)

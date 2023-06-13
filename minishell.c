@@ -6,19 +6,46 @@
 /*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:58 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/05/26 18:32:20 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/06/13 13:48:26 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
+
+void	ft_exu_other(t_arg *cmd, t_list *export_list)
+{
+	char	**str;
+	int		i;
+
+	i = 0;
+	while (export_list)
+	{
+		if (!ft_strncmp(export_list->content, "PATH", 4))
+			break ;
+		export_list = export_list->next;
+	}
+	str = ft_split(export_list->content, '=');
+	str = ft_split(str[1], ':');
+	while (str[i])
+	{
+		str[i] = ft_strjoin(str[i], "/");
+		i++;
+	}
+	i = 0;
+	while (str[i])
+	{
+		if (execve(ft_strjoin(str[i], cmd->cmd), cmd->arg, NULL) == -1)
+			i++;
+	}
+	printf("\e[0;31mminishell: command not found\n");
+	exit (127);
+}
 
 void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 {
-	int		i;
-	char	**path;
-
-	i = -1;
-	path = ft_split("/Users/zel-kach/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/zel-kach/.brew/bin", ':');
-	if (!ft_strncmp(cmd->cmd, "pwd", 4))
+	if (!ft_strncmp(cmd->cmd, "\t", 3))
+		exit (0);
+	else if (!ft_strncmp(cmd->cmd, "pwd", 4))
 		my_pwd();
 	else if (!ft_strncmp(cmd->cmd, "exit", 5))
 		my_exit(cmd);
@@ -33,13 +60,7 @@ void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 	else if (!ft_strncmp(cmd->cmd, "unset", 6))
 		my_unset(cmd, export_list, env_list);
 	else
-	{
-		execve(cmd->cmd, cmd->arg, NULL);
-		while (path[++i])
-			execve(ft_strjoin(ft_strjoin(path[i], "/"), cmd->cmd), cmd->arg, NULL);
-		printf("\e[0;31mminishell: command not found\n");
-		exit (127);
-	}
+		ft_exu_other(cmd, export_list);
 	exit (0);
 }
 

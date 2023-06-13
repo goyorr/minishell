@@ -17,10 +17,10 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	unsigned char	*s11;
 	unsigned char	*s22;
 
+	if (!s1 || !s2)
+		return (1);
 	s11 = (unsigned char *)s1;
 	s22 = (unsigned char *)s2;
-	if (!s1)
-		return (1);
 	i = 0;
 	while (n-- > 0)
 	{

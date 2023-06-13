@@ -19,7 +19,7 @@ char	*ft_strjoin(char const	*s1, char const	*s2)
 	size_t	s1l;
 	size_t	s2l;
 
-	if (!s1 || !s2)
+	if (!s2)
 		return (0);
 	s1l = ft_strlen(s1);
 	s2l = ft_strlen(s2);

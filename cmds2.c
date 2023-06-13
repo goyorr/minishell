@@ -13,10 +13,29 @@
 
 void	print_epxport(t_list *export_list)
 {
-	while (export_list)
+	char	*tmp;
+	char	**tmp2;
+	int		i;
+
+	while (export_list) // same var
 	{
-		if (export_list->content)
-			printf("declare -x %s\n", export_list->content);
+		printf("declare -x ");
+		tmp = ft_strdup(export_list->content);
+		i = -1;
+		while (tmp[++i])
+		{
+			if (tmp[i] == '=')
+			{
+				tmp2 = ft_split(export_list->content, '=');
+				if (tmp2[1])
+					printf("=\"%s\"", tmp2[1]);
+				else
+					printf("=\"\"");
+				break ;
+			}
+			printf("%c", tmp[i]);
+		}
+		printf("\n");
 		export_list = export_list->next;
 	}
 }
@@ -30,8 +49,8 @@ int	export_empty(t_list *export_list, t_list *env_list, char *var)
 	{
 		if (var[i] == '=' && var[i + 1] == '\0')
 		{
-			ft_lstadd_back(&export_list, ft_lstnew(ft_strjoin(var, "\"\"")));
-			ft_lstadd_back(&env_list, ft_lstnew(ft_strjoin(var, "\"\"")));
+			ft_lstadd_back(&export_list, ft_lstnew(var));
+			ft_lstadd_back(&env_list, ft_lstnew(var));
 			return (0);
 		}
 		else if (!var[i + 1])
