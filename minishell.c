@@ -13,27 +13,32 @@
 
 void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 {
-	if (!ft_strncmp(cmd->cmd, "pwd\0", 4))
+	int		i;
+	char	**path;
+
+	i = -1;
+	path = ft_split("/Users/zel-kach/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin:/Users/zel-kach/.brew/bin", ':');
+	if (!ft_strncmp(cmd->cmd, "pwd", 4))
 		my_pwd();
-	else if (!ft_strncmp(cmd->cmd, "exit\0", 5))
-		my_exit();
-	else if (!ft_strncmp(cmd->cmd, "echo\0", 5))
+	else if (!ft_strncmp(cmd->cmd, "exit", 5))
+		my_exit(cmd);
+	else if (!ft_strncmp(cmd->cmd, "echo", 5))
 		my_echo(cmd);
-	else if (!ft_strncmp(cmd->cmd, "cd\0", 3))
+	else if (!ft_strncmp(cmd->cmd, "cd", 3))
 		my_cd(cmd);
-	else if (!ft_strncmp(cmd->cmd, "env\0", 4))
+	else if (!ft_strncmp(cmd->cmd, "env", 4))
 		my_env(env_list);
-	else if (!ft_strncmp(cmd->cmd, "export\0", 6))
+	else if (!ft_strncmp(cmd->cmd, "export", 6))
 		my_export(export_list, env_list, cmd->arg[1]);
-	else if (!ft_strncmp(cmd->cmd, "unset\0", 6))
+	else if (!ft_strncmp(cmd->cmd, "unset", 6))
 		my_unset(cmd, export_list, env_list);
 	else
 	{
-		if (execve(cmd->cmd, cmd->arg, NULL) == -1)
-			if (execve(ft_strjoin("/bin/", cmd->cmd), cmd->arg, NULL) == -1)
-				if (execve(ft_strjoin("/usr/bin/", cmd->cmd), cmd->arg, NULL)
-					== -1)
-					printf("\e[0;31mminishell: command not found\n");
+		execve(cmd->cmd, cmd->arg, NULL);
+		while (path[++i])
+			execve(ft_strjoin(ft_strjoin(path[i], "/"), cmd->cmd), cmd->arg, NULL);
+		printf("\e[0;31mminishell: command not found\n");
+		exit (127);
 	}
 	exit (0);
 }
@@ -86,6 +91,7 @@ void	ft_read(t_list	*export_list, t_list *env_list)
 			if (ft_parsing(tmp) || token_line(str, export_list, env_list))
 			{
 				printf("\e[0;31msyntax error\n");
+				g_ext_s = 258;
 				continue ;
 			}
 			free(str);

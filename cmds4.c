@@ -16,9 +16,9 @@ int	redirect(t_arg *tmp)
 	int	file_d;
 
 	if (tmp->next->cmd[1] == '\0')
-		file_d = open(tmp->next->redfile, O_CREAT | O_RDWR | O_TRUNC);
+		file_d = open(tmp->next->redfile, O_CREAT | O_RDWR | O_TRUNC, 0777);
 	else
-		file_d = open(tmp->next->redfile, O_CREAT | O_RDWR | O_APPEND);
+		file_d = open(tmp->next->redfile, O_CREAT | O_RDWR | O_APPEND, 0777);
 	dup2(file_d, 1);
 	return (file_d);
 }

@@ -74,8 +74,8 @@ typedef struct s_data
 /*---commands---*/
 void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list);
 void	my_export(t_list *export_list, t_list *env_list, char *var);
-void	my_pwd(void);
-void	my_exit(void);
+void	my_pwd();
+void	my_exit(t_arg *cmd);
 void	my_cd(t_arg *cmd);
 void	my_unset(t_arg *cmd, t_list *export_list, t_list *env_list);
 void	my_exec_cmd(t_arg *cmd, int pi);
@@ -93,7 +93,9 @@ void	my_echo3(t_arg *cmd, int pi);
 void	my_echo4(t_arg *cmd);
 void	my_env(t_list *env_list);
 int		redirect(t_arg *tmp);
+void	redirect1(t_arg *tmp);
 void	doc_handler(int signal);
+void	fhere_doc(t_arg *tmp);
 
 /*---signals---*/
 void	sighandler(int signal);

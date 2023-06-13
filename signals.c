@@ -21,6 +21,7 @@ void	sighandler(int signal)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_ext_s = 130;
 		return ;
 	}
 	else if (signal == 11)

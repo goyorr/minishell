@@ -32,7 +32,6 @@ int	get_next_pip(t_arg *arg)
 	return(c);
 }
 
-
 int	get_next_red(t_arg *arg)
 {
 	int c;
