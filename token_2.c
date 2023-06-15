@@ -9,7 +9,6 @@
 /*   Updated: 2023/06/13 13:36:46 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
 t_token * new_token(char *cmd, t_type type)

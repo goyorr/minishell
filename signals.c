@@ -26,7 +26,7 @@ void	sighandler(int signal)
 	}
 	else if (signal == 11)
 	{
-		write(1, "ssexit\n", 7);
+		write(1, "exit\n", 5);
 		exit (0);
 	}
 }

@@ -9,7 +9,6 @@
 /*   Updated: 2023/06/13 13:42:54 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell.h"
 
 int	get_next_quotes(char *line, int n, int i)

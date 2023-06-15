@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 04:52:09 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/13 12:32:07 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/06/14 09:43:16 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,9 @@
 # include <string.h>
 # include <sys/errno.h>
 
-# define NOR 0
-# define PIPE 1
-# define FPIPE 2
-# define EEPIPE 3
-# define APND 4
-# define TRNC 5
+// # define NOR 0
+// # define APND 4
+// # define TRNC 5
 
 int	g_ext_s;
 
@@ -74,10 +71,10 @@ typedef struct s_data
 /*---commands---*/
 void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list);
 void	my_export(t_list *export_list, t_list *env_list, char *var);
-void	my_pwd();
+void	my_pwd(void);
 void	my_exit(t_arg *cmd);
 void	my_cd(t_arg *cmd);
-void	my_unset(t_arg *cmd, t_list *export_list, t_list *env_list);
+void	my_unset(char *cmd, t_list *export_list, t_list *env_list);
 void	my_exec_cmd(t_arg *cmd, int pi);
 void	execute(t_arg *tmp, t_list *export_list, t_list *env_list);
 void	my_exec_cmd_a1(t_arg *cmd, int pi, int current_pipe);
@@ -87,15 +84,15 @@ void	my_exec_cmd_c2(t_arg *cmd, int pi);
 void	my_exec_cmd_d1(t_arg *cmd, int pi);
 void	my_exec_cmd_e1(t_arg *cmd, int pi);
 void	my_echo(t_arg *cmd);
-void	my_echo1(t_arg *cmd, int pi);
-void	my_echo2(t_arg *cmd, int pi);
-void	my_echo3(t_arg *cmd, int pi);
-void	my_echo4(t_arg *cmd);
 void	my_env(t_list *env_list);
 int		redirect(t_arg *tmp);
-void	redirect1(t_arg *tmp);
+void	here_doc(t_arg *tmp, t_list *export_list, t_list *env_list, int fd[2], int s);
 void	doc_handler(int signal);
-void	fhere_doc(t_arg *tmp);
+void	unset_export(char *cmd, t_list *export_list);
+void	close_file(int file_d, int fd[2]);
+int		reset(int pid);
+int		parent(int file_d, int s, int fd[2]);
+int		hered_check(t_arg *tmp);
 
 /*---signals---*/
 void	sighandler(int signal);
