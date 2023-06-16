@@ -86,13 +86,14 @@ void	my_exec_cmd_e1(t_arg *cmd, int pi);
 void	my_echo(t_arg *cmd);
 void	my_env(t_list *env_list);
 int		redirect(t_arg *tmp);
-void	here_doc(t_arg *tmp, t_list *export_list, t_list *env_list, int fd[2], int s);
+int		here_doc(t_arg *tmp, int fd[2]);
 void	doc_handler(int signal);
 void	unset_export(char *cmd, t_list *export_list);
 void	close_file(int file_d, int fd[2]);
 int		reset(int pid);
 int		parent(int file_d, int s, int fd[2]);
 int		hered_check(t_arg *tmp);
+int		redirect_inpt(t_arg *tmp);
 
 /*---signals---*/
 void	sighandler(int signal);
