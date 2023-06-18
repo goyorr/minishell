@@ -39,27 +39,13 @@ void	multi_red(t_arg *tmp)
 	}
 }
 
-void	multi_inptred(t_arg *tmp)
-{
-	t_arg	*tmp2;
-	int		file_d;
-
-	file_d = 0;
-	tmp2 = tmp;
-	while (tmp2->next && !ft_strncmp(tmp->next->cmd, "<", 2))
-	{
-		file_d = open(tmp2->next->redfile, O_CREAT | O_RDWR | O_TRUNC, 0644);
-		close(file_d);
-		tmp2 = tmp2->next;
-	}
-}
-
 void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 {
 	int			fd[2];
 	int			fd2[2];
 	static int	s;
 	int			pid;
+	int			file_d2;
 
 	pipe(fd);
 	pipe(fd2);
@@ -82,7 +68,18 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 		if (tmp && tmp->next && tmp->next->cmd[0] == '|')
 			dup2(fd[1], STDOUT_FILENO);
 		else if ((tmp && tmp->next && tmp->next->cmd[0] == '>'))
+		{
 			file_d = redirect(tmp);
+			file_d2 = redirect_inpt(tmp);
+			if (file_d2 == -1)
+			{
+				printf ("minishell: %s: No such file or directory\n", tmp->next->redfile);
+				close_file(file_d2, fd2);
+				close_file(file_d, fd);
+				exit(1);
+			}
+			s = 0;
+		}
 		else if ((tmp && tmp->next && tmp->next->cmd[0] == '<'))
 		{
 			file_d = redirect_inpt(tmp);
@@ -139,9 +136,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 			my_exit(tmp);
 		else
 		{
-			if (tmp && get_next_red(tmp) > 1) // ??? | >
-				multi_red(tmp);
-			if (tmp && get_next_red(tmp) > 1) // ??? | >
+			if (tmp && get_next_red(tmp) > 1)
 				multi_red(tmp);
 			execute1(tmp, export_list, env_list, file_d);
 			if (hered_check(tmp))
@@ -150,10 +145,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 				while (tmp)
 				{
 					if (tmp->cmd[0] == '|')
-					{
-						tmp = tmp->next;
 						break ;
-					}
 					tmp = tmp->next;
 				}
 			}

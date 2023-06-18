@@ -61,31 +61,29 @@ int	export_empty(t_list *export_list, t_list *env_list, char *var)
 
 char	*add_var(t_list *export_list, char *var)
 {
-	t_list	*tmp;
 	char	**tmp2;
 	char	**tmp3;
 
-	tmp = export_list;
 	tmp3 = ft_split(var, '+');
-	while (tmp)
+	while (export_list)
 	{
-		tmp2 = ft_split(tmp->content, '=');
+		tmp2 = ft_split(export_list->content, '=');
 		if (!ft_strncmp(tmp2[0], tmp3[0], ft_strlen(tmp3[0]))
 			&& ft_strlen(tmp3[0]) == ft_strlen(tmp2[0]))
 		{
 			if (tmp3[1] && tmp3[1][1] != '\0')
 			{
-				char *lol = ft_strjoin(tmp->content, tmp3[1] + 1);
+				var = ft_strjoin(export_list->content, tmp3[1] + 1);
 				free(tmp2);
 				free(tmp3);
-				return (lol);
+				return (var);
 			}
 			free(tmp2);
 			free(tmp3);
 			return (ft_strjoin(tmp3[0], tmp3[1]));
 		}
 		free(tmp2);
-		tmp = tmp->next;
+		export_list = export_list->next;
 	}
 	return (ft_strjoin(tmp3[0], tmp3[1]));
 }
@@ -121,33 +119,11 @@ void	my_export(t_list *export_list, t_list *env_list, char *var)
 {
 	int		i;
 
-	i = 0;
 	if (var)
 	{
-		if (!ft_isalpha(var[i]))
-		{
-			printf("\e[0;31mminishell: export: not a valid identifier\n");
-			g_ext_s = 1;
+		var = export_pars(export_list, var);
+		if (!var)
 			return ;
-		}
-		while (var[++i])
-		{
-			if (var[i] == '+')
-			{
-				if (var[i + 1] && var[i + 1] == '=')
-				{
-					var = add_var(export_list, var);
-					if (!var)
-						return ;
-					break ;
-				}
-				else
-				{
-					printf ("minishell: export: %s: not a valid identifier\n", var);
-					return ;
-				}
-			}
-		}
 		if (!same_var(export_list, env_list, var))
 			return ;
 		if (!export_empty(export_list, env_list, var))
@@ -166,4 +142,3 @@ void	my_export(t_list *export_list, t_list *env_list, char *var)
 	}
 	print_epxport(export_list);
 }
-

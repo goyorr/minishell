@@ -33,6 +33,7 @@
 # include "libft/libft.h"
 # include <string.h>
 # include <sys/errno.h>
+# include <paths.h>
 
 // # define NOR 0
 // # define APND 4
@@ -94,6 +95,9 @@ int		reset(int pid);
 int		parent(int file_d, int s, int fd[2]);
 int		hered_check(t_arg *tmp);
 int		redirect_inpt(t_arg *tmp);
+int		get_next_inptred(t_arg *arg);
+char	*export_pars(t_list *export_list, char *var);
+char	*add_var(t_list *export_list, char *var);
 
 /*---signals---*/
 void	sighandler(int signal);

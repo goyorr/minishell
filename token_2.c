@@ -69,6 +69,40 @@ void	ft_tokenization(t_token	**token, t_data *data, t_list *export_list, char *l
 			add_free(data, token);
 	}
 }
+int 	parsing_3(char *line)
+{
+	int i;
+	int	c;
+
+	i = 0;
+	c = 0;
+	while (line[i])
+	{
+		if (line[i] == '<' && line[i + 1] == '<')
+		{
+			i += 2;
+			while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+				i++;
+			if (line[i] == '\"' && line[i + 1] == '\"')
+			{
+				i += 2;
+				c++;
+				while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+					i++;
+			}
+		}
+		if ((line[i] == '<' && line[i + 1] == '<' )|| (line[i] == '<' && line[i + 1] == '<'))
+			c = 0;
+		else if (line[i] == '<' || line[i] == '>' || line[i] == '|')
+		{
+			c = 0;
+			i++;
+		}
+		else
+			i++;
+	}
+	return(c);
+}
 
 int  token_line(char *line, t_list *export_list, t_list *env_list)
 {
@@ -82,7 +116,7 @@ int  token_line(char *line, t_list *export_list, t_list *env_list)
 	data->i = 0;
 	data->str = NULL;
 	ft_tokenization(&token, data, export_list, line);
-	if (ft_parsing_2(&token))
+	if (ft_parsing_2(&token) && !parsing_3(line))
 	{
 		free_list(token);
 		return(1);

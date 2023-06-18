@@ -83,12 +83,9 @@ void	apend_redirection(t_token **tmp, t_arg **arg)
 {
 	t_arg *red = newarg_token((*tmp)->cmd, (*tmp)->type);
 	(*tmp) = (*tmp)->next;
-	if ((*tmp))
-	{
-
+	if ((*tmp) && !get_token((*tmp)->cmd))
 		red->redfile = ft_strdup((*tmp)->cmd);
-	}
-	if ((*tmp))
+	if ((*tmp) && ft_strncmp((*tmp)->cmd, "<<", 3))
 	{
 		(*tmp) = (*tmp)->next;
 		append_word(tmp, arg);
@@ -119,8 +116,13 @@ void	is_arg(t_token *tmp, t_arg **arg)
 		{
 			if (tmp)
 			{
-				ft_argadd_back(arg, newarg_token(tmp->cmd, tmp->type));
-				tmp = tmp->next;
+				if (!(ft_strncmp(tmp->cmd,"<<", 3)))
+					apend_redirection(&tmp, arg);
+				else
+				{
+					ft_argadd_back(arg, newarg_token(tmp->cmd, tmp->type));
+					tmp = tmp->next;
+				}
 			}
 		}
 	}
