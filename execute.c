@@ -129,7 +129,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 				tmp = tmp->next;
 			}
 			tmp = tmp->next;
-		}
+		} 
 		else if (tmp && (tmp->cmd[0] == '>' || !ft_strncmp(tmp->cmd, "<", 2)))
 			tmp = tmp->next;
 		else if (tmp && !ft_strncmp(tmp->cmd, "exit", 5))
@@ -158,18 +158,22 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list, int file_d)
 void	execute(t_arg *tmp, t_list *export_list, t_list *env_list)
 {
 	int	file_d;
-
+	int	i;
+	
+	i = 0;
 	file_d = 0;
 	if (!get_next_pip(tmp) && !ft_strncmp(tmp->cmd,
 			"export", 7) && tmp->arg[1])
 	{
-		my_export(export_list, env_list, tmp->arg[1]);
+		while (tmp->arg[++i])
+			my_export(export_list, env_list, tmp->arg[i]);
 		return ;
 	}
 	else if (!get_next_pip(tmp) && !ft_strncmp(tmp->cmd,
 			"unset", 6) && tmp->arg[1])
 	{
-		my_unset(tmp->arg[1], export_list, env_list);
+		while (tmp->arg[++i])
+			my_unset(tmp->arg[i], export_list, env_list);
 		return ;
 	}
 	else if (!ft_strncmp(tmp->cmd, "cd", 3) && !tmp->next)

@@ -13,17 +13,19 @@ char	*export_pars(t_list *export_list, char *var)
 	}
 	while (var[++i])
 	{
-		if (var[i + 1] && var[i + 1] == '=')
+		if (var[i] == '=')
 		{
-			if (!ft_isalnum(var[i]) && var[i] != '+')
+			if (!ft_isalnum(var[i - 1]))
 			{
 				printf ("export: %s: not a valid identifier\n", var);
 				return (NULL);
 			}
+			else
+				break ;
 		}
 		if (var[i] == '+')
 		{
-			if (var[i + 1] && var[i + 1] == '=')
+			if (var[i + 1] && var[i + 1] == '=' && ft_isalnum(var[i - 1]))
 				return (add_var(export_list, var));
 			else
 			{

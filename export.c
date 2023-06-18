@@ -14,7 +14,6 @@
 void	print_epxport(t_list *export_list)
 {
 	char	*tmp;
-	char	**tmp2;
 	int		i;
 
 	while (export_list)
@@ -26,11 +25,9 @@ void	print_epxport(t_list *export_list)
 		{
 			if (tmp[i] == '=')
 			{
-				tmp2 = ft_split(export_list->content, '=');
-				if (tmp2[1])
-					printf("=\"%s\"", tmp2[1]);
-				else
-					printf("=\"\"");
+				printf("=\"");
+				printf("%s", ft_strchr(export_list->content, '=') + 1);
+				printf("\"");
 				break ;
 			}
 			printf("%c", tmp[i]);
