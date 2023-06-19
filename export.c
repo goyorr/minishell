@@ -102,13 +102,13 @@ int	same_var(t_list *export_list, t_list *env_list, char *var)
 			if (!tmp3[1] && var[ft_strlen(var) - 1] != '=')
 				return (0);
 			my_unset(tmp2[0], export_list, env_list);
-			free(tmp2);
+			free_tabb(tmp2);
 			return (1);
 		}
-		free(tmp2);
+		free_tabb(tmp2);
 		tmp = tmp->next;
 	}
-	free(tmp3);
+	free_tabb(tmp3);
 	return (1);
 }
 
