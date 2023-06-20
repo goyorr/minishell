@@ -26,7 +26,6 @@ char **alloc_arg(char **args, char *cmd)
 	}
 	new[i++] = ft_strdup(cmd);
 	new[i] = NULL;
-	free(cmd);
 	free_tabb(args);
 	return (new);
 }
@@ -130,7 +129,6 @@ void	is_arg(t_token *tmp, t_arg **arg)
 			}
 		}
 	}
-	free_list(tmp);
 }
 
  void	free_tabb(char **tabb)
@@ -146,7 +144,7 @@ void	is_arg(t_token *tmp, t_arg **arg)
  void	free_list(t_token *tabb)
 {
 	while (tabb)
-	{	
+	{
 		free(tabb->cmd);
 		free(tabb);
 		tabb = tabb->next;
@@ -164,5 +162,4 @@ void	is_arg(t_token *tmp, t_arg **arg)
 			free(str->redfile);
 		str = str->next;
 	}
-	free(str);
 }

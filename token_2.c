@@ -119,10 +119,10 @@ int  token_line(char *line, t_list *export_list, t_list *env_list)
 	if (ft_parsing_2(&token) && !parsing_3(line))
 		return(free(line), free_list(token), free(data), 1);
 	is_arg(token, &arg);
-	free_list(token);
-	free(line);
-	free(data);
+	// free_list(token);
+	// free(line);
+	// free(data);
 	execute(arg, export_list, env_list);
-	free_arg(arg);
+	// free_arg(arg);
 	return(0);
 }

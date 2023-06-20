@@ -61,7 +61,6 @@ void	ft_exu_other(t_arg *cmd, t_list *export_list, t_list *list_env)
 		if (execve(ft_strjoin(str[i], cmd->cmd), cmd->arg, env) == -1)
 			i++;
 	}
-	printf("\e[0;31mminishell: cmmand not found\n");
 	free_arg(cmd);
 	exit (127);
 }
@@ -81,7 +80,10 @@ void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 	else if (!ft_strncmp(cmd->cmd, "env", 4))
 		my_env(env_list);
 	else if (!ft_strncmp(cmd->cmd, "export", 6))
+	{
+		printf("main\n");
 		my_export(export_list, env_list, cmd->arg[1]);
+	}
 	else if (!ft_strncmp(cmd->cmd, "unset", 6))
 		my_unset(cmd->arg[1], export_list, env_list);
 	else
@@ -134,7 +136,6 @@ void	ft_read(t_list	**export_list, t_list *env_list)
 				g_ext_s = 258;
 			}
 		}
-		// system("leaks minishell");
 	}
 }
 
@@ -199,6 +200,5 @@ int	main(int ac, char **av, char *env[])
 				ft_lstadd_back(&export_list, ft_lstnew(env[i]));
 		}
 	}
-
 	ft_read(&export_list, env_list);
 }

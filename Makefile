@@ -15,7 +15,8 @@ NAME = minishell
 SRC = minishell.c cmds.c execute_utils.c execute.c \
 	 redirect.c echo.c here_doc.c export.c unset.c \
 	 arg.c parsing_2.c parsing.c token_2.c token.c \
-	 utils.c signals.c doc_signal.c export_helper.c
+	 utils.c signals.c export_helper.c execute_utils2.c \
+	 execute2.c pwd.c here_doc_utils.c
 OBJ = ${SRC:.c=.o}
 
 libfta = ./libft/libft.a

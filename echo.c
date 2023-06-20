@@ -28,9 +28,9 @@ void	echo_newline(t_arg *cmd)
 	printf("\n");
 }
 
-int chek_arg(char *str)
+int	chek_arg(char *str)
 {
-	int j;
+	int	j;
 
 	j = 1;
 	while (str[j])

@@ -33,16 +33,6 @@ void	sighandler(int signal)
 
 void	sighandler_child(int signal)
 {
-	if (signal == 3)
-	{
-		write(1, "Quit: 3\n", 9);
-		g_ext_s = 131;
-	}
-	else if (signal == 2)
-	{
-		write(1, "\n", 1);
-		g_ext_s = 130;
-	}
-	else if (signal == 11)
-		exit (0);
+	if (signal == 11 || signal == 2 || signal == 3)
+		return ;
 }
