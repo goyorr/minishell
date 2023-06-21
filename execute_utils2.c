@@ -1,14 +1,3 @@
-/******************************************************************************/
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   execute_utils2.c                                   :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/20 16:10:01 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/20 16:10:17 by zel-kach         ###   ########.fr       */
-/*                                                                            */
-/******************************************************************************/
 
 #include "minishell.h"
 
@@ -63,11 +52,11 @@ t_arg	*if_export(t_arg *tmp, t_list *export_list, t_list *env_list)
 	int	i;
 
 	i = 0;
-	if (tmp->next && tmp->next->cmd[0] == '|')
+	if (tmp && tmp->next && tmp->next->cmd[0] == '|')
 		tmp = tmp->next;
-	else
+	else if (tmp)
 	{
-		while (tmp->arg[++i])
+		while (tmp && tmp->arg[++i])
 			my_export(export_list, env_list, tmp->arg[i]);
 		if (!tmp->next)
 			return (NULL);

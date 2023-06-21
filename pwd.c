@@ -1,23 +1,23 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/20 16:09:34 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/20 16:09:35 by zel-kach         ###   ########.fr       */
+/*   Created: 2023/06/21 02:56:01 by aaghbal           #+#    #+#             */
+/*   Updated: 2023/06/21 03:10:55 by aaghbal          ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pwd(t_list **expo)
+void	ft_pwd(t_list *expo)
 {
 	char	**tmp2;
 	t_list	*head;
 
-	head = *expo;
+	head = expo;
 	while (head)
 	{
 		tmp2 = ft_split(head->content, '=');
@@ -32,16 +32,16 @@ void	ft_pwd(t_list **expo)
 	}
 }
 
-void	ft_oldpwd(t_list **expo)
+void	ft_oldpwd(t_list *expo)
 {
 	char	**tmp2;
 	t_list	*head;
 
-	head = *expo;
+	head = expo;
 	while (head)
 	{
 		tmp2 = ft_split(head->content, '=');
-		if (!ft_strncmp(tmp2[0], "OLDPWD", ft_strlen(tmp2[0]))
+		if (head->content && !ft_strncmp(tmp2[0], "OLDPWD", ft_strlen(tmp2[0]))
 			&& ft_strlen(tmp2[0]) == ft_strlen("OLDPWD"))
 		{
 			head->content = ft_substr(head->content, 0, ft_strlen("OLDPWD="));

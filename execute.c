@@ -21,6 +21,8 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	pipe(fd);
 	pipe(fd2);
 	pid = fork();
+	if (pid == -1)
+		perror("Error");
 	signal(3, sighandler_child);
 	signal(2, sighandler_child);
 	if (pid == 0)
@@ -66,7 +68,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 	{
 		if (tmp && tmp->cmd[0] == '|')
 		{
-			if (tmp->next->cmd[0] == '>')
+			if (tmp->next && tmp->next->cmd[0] == '>')
 			{
 				execute1(tmp, export_list, env_list);
 				tmp = tmp->next->next;
@@ -80,7 +82,6 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 		else
 			tmp = exe1(tmp, export_list, env_list);
 	}
-	free_arg(tmp);
 }
 
 void	execute(t_arg *tmp, t_list *export_list, t_list *env_list)
@@ -90,7 +91,6 @@ void	execute(t_arg *tmp, t_list *export_list, t_list *env_list)
 	i = 0;
 	if (!ft_strncmp(tmp->cmd, "export", 7) && tmp->arg[1])
 	{
-		tmp = if_export(tmp, export_list, env_list);
 		tmp = if_export(tmp, export_list, env_list);
 		if (!tmp)
 			return ;
@@ -103,7 +103,7 @@ void	execute(t_arg *tmp, t_list *export_list, t_list *env_list)
 	}
 	else if (!ft_strncmp(tmp->cmd, "cd", 3) && !tmp->next)
 	{
-		my_cd(tmp, &export_list);
+		my_cd(tmp, export_list, env_list);
 		return ;
 	}
 	execute2(tmp, export_list, env_list);
