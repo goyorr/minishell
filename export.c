@@ -49,12 +49,12 @@ void	export_empty(t_list *export_list, t_list *env_list, char *var)
 	{
 		if (var[i] == '=')
 		{
-			ft_lstadd_back(&export_list, ft_lstnew(tmp));
-			ft_lstadd_back(&env_list, ft_lstnew(tmp));
+			ft_lstadd_back(&export_list, ft_lstnew(tmp, 1));
+			ft_lstadd_back(&env_list, ft_lstnew(tmp, 1));
 			return ;
 		}
 		else if (!var[i + 1])
-			ft_lstadd_back(&export_list, ft_lstnew(tmp));
+			ft_lstadd_back(&export_list, ft_lstnew(tmp, 1));
 	}
 	return ;
 }
