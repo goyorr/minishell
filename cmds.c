@@ -68,6 +68,8 @@ void	my_cd(t_arg *cmd, t_list *expo, t_list *env)
 
 void	my_env(t_list *env_list)
 {
+	if (!ft_strncmp("__Head", env_list->content, 7))
+		env_list = env_list->next;
 	while (env_list)
 	{
 		if (env_list->content)

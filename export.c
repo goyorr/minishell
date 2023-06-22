@@ -16,6 +16,8 @@ void	print_epxport(t_list *export_list)
 	char	*tmp;
 	int		i;
 
+	if (!ft_strncmp("__Head", export_list->content, 7))
+		export_list = export_list->next;
 	while (export_list)
 	{
 		printf("declare -x ");

@@ -102,6 +102,7 @@ void	ft_read(t_list	**export_list, t_list *env_list)
 				printf("\e[0;31msyntax error\n");
 				g_ext_s = 258;
 			}
+			
 		}
 	}
 	system("leaks minishell");
@@ -162,6 +163,8 @@ void	ft_env_exp(char **env, t_list	**env_list, t_list	**export_list)
 				ft_lstadd_back(export_list, ft_lstnew(env[i], 0));
 		}
 	}
+	ft_lstadd_front(export_list, ft_lstnew("__Head", 0));
+	ft_lstadd_front(env_list, ft_lstnew("__Head", 0));
 }
 
 int	main(int ac, char **av, char *env[])
