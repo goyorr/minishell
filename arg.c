@@ -66,6 +66,18 @@ void	append_word(t_token **tmp, t_arg **arg)
 			(*tmp) = (*tmp)->next;
 		}
 }
+void	append_word_2(char **tmp, t_arg **arg)
+{
+	int i = 1;
+	t_arg *tmp2;
+	printf("! = %s\n", tmp[i]);
+	while (tmp[i])
+	{
+		tmp2 = ft_arglast(*arg);
+		tmp2->arg = alloc_arg(tmp2->arg, tmp[i]);
+		i++;
+	}
+}
 
 void	apend_redirection(t_token **tmp, t_arg **arg)
 {
@@ -88,7 +100,14 @@ void	is_arg(t_token *tmp, t_arg **arg)
 {
 	while (tmp)
 	{
-		if (tmp->type == tokenword || tmp->key == 1)
+		char **tmp2 = ft_split(tmp->cmd, ' ');
+		if(tmp2[1] && ft_strncmp(tmp->cmd, "echo", 5))
+		{
+			ft_argadd_back(arg, newarg_token(tmp2[0], (tmp)->type));
+			append_word_2(tmp2, arg);
+			tmp = tmp->next;
+		}
+		else if (tmp->type == tokenword || tmp->key == 1)
 		{
 			if ((tmp && tmp->type == tokenword ) || tmp->key == 1)
 			{
@@ -112,6 +131,7 @@ void	is_arg(t_token *tmp, t_arg **arg)
 				}
 			}
 		}
+		free_tabb(tmp2);
 	}
 }
 
@@ -140,6 +160,7 @@ void	is_arg(t_token *tmp, t_arg **arg)
 	if (tabb)
 		free(tabb);
 }
+
  void	free_arg(t_arg *str)
 {
 	while (str)

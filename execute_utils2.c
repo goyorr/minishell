@@ -35,7 +35,7 @@ t_arg	*first_redirect(t_arg *tmp)
 {
 	int	file_d;
 
-	if (tmp->cmd[0] == '>' && !tmp->redfile)
+	if (tmp->next &&  tmp->cmd[0] == '>' && !tmp->redfile)
 	{
 		file_d = open(tmp->next->cmd, O_CREAT | O_RDWR, 0644);
 		tmp = tmp->next;

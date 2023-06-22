@@ -61,7 +61,7 @@ void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 		my_cd(cmd, export_list, env_list);
 	else if (!ft_strncmp(cmd->cmd, "env", 4))
 		my_env(env_list);
-	else if (!ft_strncmp(cmd->cmd, "export", 6))
+	else if (!ft_strncmp(cmd->cmd, "export", 7))
 		my_export(export_list, env_list, cmd->arg[1]);
 	else if (!ft_strncmp(cmd->cmd, "unset", 6))
 		my_unset(cmd->arg[1], export_list, env_list);
@@ -104,6 +104,7 @@ void	ft_read(t_list	**export_list, t_list *env_list)
 			}
 		}
 	}
+	system("leaks minishell");
 }
 
 void	create_env(t_list **env_list, t_list **export_list)
