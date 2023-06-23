@@ -47,6 +47,8 @@ int	get_next_inptred(t_arg *arg)
 	c = 0;
 	while (arg)
 	{
+		if (arg->cmd[0] == '|')
+			break ;
 		if (arg->cmd[0] == '<')
 			c++;
 		arg = arg->next;

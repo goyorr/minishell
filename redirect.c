@@ -47,9 +47,9 @@ int	redirect_inpt(t_arg *tmp, int fd[2])
 {
 	int	file_d;
 
-	if (!ft_strncmp(tmp->next->cmd, ">", 2))
+	if (tmp->next && !ft_strncmp(tmp->next->cmd, ">", 2))
 		tmp = tmp->next;
-	if (!access(tmp->next->redfile, R_OK))
+	if (tmp->next && !access(tmp->next->redfile, R_OK))
 		file_d = open(tmp->next->redfile, O_RDONLY);
 	else
 		return (-1);

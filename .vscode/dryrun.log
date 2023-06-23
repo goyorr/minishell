@@ -1,0 +1,51 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/zel-kach/Desktop/new'
+make -C libft
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c minishell.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c cmds.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c execute_utils.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c execute.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c redirect.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c echo.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c here_doc.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c export.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c unset.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c arg.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c parsing_2.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c parsing.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c token_2.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c token.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c utils.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c signals.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c export_helper.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c execute_utils2.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c execute2.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c pwd.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c here_doc_utils.c
+ 
+cc -Wall -Wextra  -g -I /Users/zel-kach/.brew/opt/readline/include -c utils_2.c
+ 
+cc minishell.o cmds.o execute_utils.o execute.o redirect.o echo.o here_doc.o export.o unset.o arg.o parsing_2.o parsing.o token_2.o token.o utils.o signals.o export_helper.o execute_utils2.o execute2.o pwd.o here_doc_utils.o utils_2.o ./libft/libft.a -L /Users/zel-kach/.brew/opt/readline/lib -lreadline -o minishell 
+make: Leaving directory `/Users/zel-kach/Desktop/new'
+ 

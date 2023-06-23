@@ -24,7 +24,7 @@ void	unset_export(char *cmd, t_list *export_list)
 				|| !ft_strncmp(tmp->content + ft_strlen(cmd), "\0", 1)))
 		{
 			export_list->next = tmp->next;
-			if (export_list->type)
+			if (tmp->type)
 				free(tmp->content);
 			free(tmp);
 			tmp = NULL;

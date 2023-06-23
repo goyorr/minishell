@@ -22,8 +22,14 @@ int	execute_child(t_arg *tmp, int fd[2], int fd2[2], int s)
 			file_d2 = r_inpt(tmp, fd, fd2);
 		file_d = redirect(tmp);
 	}
-	else if ((tmp->next && tmp->next->cmd[0] == '<'))
+	else if ((tmp->next &&  !ft_strncmp(tmp->next->cmd, "<", 2)))
 		file_d = r_inpt(tmp, fd, fd2);
+	else if ((tmp->next &&  !ft_strncmp(tmp->cmd, "<", 2)))
+	{
+		file_d = r_inpt(tmp, fd, fd2);
+		while (tmp->cmd[0] == '<')
+			tmp = tmp->next;
+	}
 	close_file(file_d, fd2);
 	close_file(file_d2, fd);
 	return (1);
