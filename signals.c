@@ -24,22 +24,17 @@ void	sighandler(int signal)
 		g_ext_s = 1;
 		return ;
 	}
-	else if (signal == 11)
-	{
-		write(1, "exit\n", 5);
-		exit (0);
-	}
 }
 
 void	sighandler_child(int signal)
 {
-	if (signal == 11 || signal == 2 || signal == 3)
+	if (signal == 2 || signal == 3)
 		return ;
 }
 
-t_token * new_token(char *cmd, t_type type, int k)
+t_token	*new_token(char *cmd, t_type type, int k)
 {
-	t_token * node;
+	t_token	*node;
 
 	node = (t_token *)malloc(sizeof(t_token));
 	if (node == NULL)
@@ -53,9 +48,9 @@ t_token * new_token(char *cmd, t_type type, int k)
 	return (node);
 }
 
-t_arg * newarg_token(char *cmd, t_type type)
+t_arg	*newarg_token(char *cmd, t_type type)
 {
-	t_arg *node;
+	t_arg	*node;
 
 	node = (t_arg *)malloc(sizeof(t_arg));
 	node->cmd = ft_strdup(cmd);
@@ -64,4 +59,11 @@ t_arg * newarg_token(char *cmd, t_type type)
 	node->redfile = NULL;
 	node->next = NULL;
 	return (node);
+}
+
+void	signals(void)
+{
+	rl_catch_signals = 0;
+	signal(3, sighandler);
+	signal(2, sighandler);
 }

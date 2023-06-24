@@ -11,6 +11,12 @@
 /* ************************************************************************** */
 #include "minishell.h"
 
+void	s_handler(int s)
+{
+	dup2(s, STDIN_FILENO);
+	close(s);
+}
+
 void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list)
 {
 	static int	s;
@@ -29,10 +35,9 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	{
 		execute_child(tmp, fd, fd2, s);
 		if (s)
-		{
-			dup2(s, STDIN_FILENO);
-			close(s);
-		}
+			s_handler(s);
+		if (tmp->cmd[0] == '<')
+			no_cmd_inpt(tmp, export_list, env_list);
 		all_cmd(tmp, export_list, env_list);
 	}
 	s = parent(0, s, fd);
@@ -45,7 +50,16 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	if (tmp && get_next_red(tmp) > 1)
 		multi_red(tmp);
 	execute1(tmp, export_list, env_list);
-	if (hered_check(tmp))
+	if (tmp->cmd[0] == '<')
+	{
+		while (tmp)
+		{
+			if (tmp->cmd[0] == '|')
+				break ;
+			tmp = tmp->next;
+		}
+	}
+	else if (hered_check(tmp))
 	{
 		wait(0);
 		while (tmp)
@@ -64,17 +78,14 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 {
 	if (tmp && tmp->cmd[0] == '>')
 		tmp = first_redirect(tmp);
-	if (!ft_strncmp(tmp->cmd, "<", 2))
-	{
+	if (tmp && !ft_strncmp(tmp->cmd, "<", 2))
 		tmp = exe1(tmp, export_list, env_list);
-		while (!ft_strncmp(tmp->cmd, "<", 2))
-			tmp = tmp->next;
-		tmp = tmp->next;
-	}
 	while (tmp)
 	{
 		if (tmp && tmp->cmd[0] == '|')
 		{
+			if (!ft_strncmp(tmp->cmd, "<", 2))
+				tmp = exe1(tmp, export_list, env_list);
 			if (tmp->next && tmp->next->cmd[0] == '>')
 			{
 				execute1(tmp, export_list, env_list);

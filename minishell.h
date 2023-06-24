@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 04:52:09 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/14 09:43:16 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/06/23 12:31:37 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ typedef struct s_data
 void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list);
 void	my_export(t_list *export_list, t_list *env_list, char *var);
 void	my_pwd(t_list *export_list);
-void	my_exit(t_arg *cmd);
+t_arg	*my_exit(t_arg *cmd);
 void	my_cd(t_arg *cmd, t_list *expo, t_list *env);
 void	my_unset(char *cmd, t_list *export_list, t_list *env_list);
 void	my_exec_cmd(t_arg *cmd, int pi);
@@ -109,7 +109,11 @@ void	ft_oldpwd(t_list *expo);
 int		hered_check(t_arg *tmp);
 char	**alloc(t_arg	*file);
 char	**list_to_tabs(t_list *list);
-char *get_key_exp(t_list *exp, char *key);
+char	*get_key_exp(t_list *exp, char *key);
+void	signals(void);
+void	no_cmd_inpt(t_arg *tmp, t_list *export_list, t_list *env_list);
+int		redirect_firstnpt(t_arg *tmp, int fd[2]);
+int	r_inpt2(t_arg *tmp, int fd[2], int fd2[2]);
 
 /*---signals---*/
 void	sighandler(int signal);
@@ -118,7 +122,7 @@ void	sighandler_child2(int signal);
 
 /*---parsing---*/
 t_token	*ft_tokenlast(t_token *lst);
-t_token * new_token(char *cmd, t_type type, int k);
+t_token	*new_token(char *cmd, t_type type, int k);
 t_arg	*newarg_token(char *cmd, t_type type);
 t_arg	*ft_arglast(t_arg *lst);
 t_type	get_type(char *str);

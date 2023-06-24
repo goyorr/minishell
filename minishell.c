@@ -6,16 +6,30 @@
 /*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:58 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/13 13:48:26 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:57:56 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_exec(t_arg *cmd, t_list *list_env, char **str)
+{
+	char	**env;
+	int		i;
+
+	i = 0;
+	env = list_to_tabs(list_env);
+	execve(cmd->cmd, cmd->arg, env);
+	while (str && str[i])
+	{
+		if (execve(ft_strjoin(str[i], cmd->cmd), cmd->arg, env) == -1)
+			i++;
+	}
+}
+
 void	ft_exu_other(t_arg *cmd, t_list *export_list, t_list *list_env)
 {
 	char	**str;
-	char	**env;
 	int		i;
 
 	i = 0;
@@ -36,21 +50,14 @@ void	ft_exu_other(t_arg *cmd, t_list *export_list, t_list *list_env)
 		str[i] = ft_strjoin(str[i], "/");
 		i++;
 	}
-	i = 0;
-	env = list_to_tabs(list_env);
-	execve(cmd->cmd, cmd->arg, env);
-	while (str && str[i])
-	{
-		if (execve(ft_strjoin(str[i], cmd->cmd), cmd->arg, env) == -1)
-			i++;
-	}
-	exit (127);
+	ft_exec(cmd, list_env, str);
+	exit(127);
 }
 
 void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 {
 	if (!ft_strncmp(cmd->cmd, "\t", 3))
-		exit (0);
+		exit(0);
 	else if (!ft_strncmp(cmd->cmd, "pwd", 4))
 		my_pwd(export_list);
 	else if (!ft_strncmp(cmd->cmd, "exit", 5))
@@ -59,7 +66,7 @@ void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 		my_echo(cmd);
 	else if (!ft_strncmp(cmd->cmd, "cd", 3))
 		my_cd(cmd, export_list, env_list);
-	else if (!ft_strncmp(cmd->cmd, "env", 4))
+	else if (!ft_strncmp(cmd->cmd, "env", 4) && !cmd->arg[1])
 		my_env(env_list);
 	else if (!ft_strncmp(cmd->cmd, "export", 7))
 		my_export(export_list, env_list, cmd->arg[1]);
@@ -67,11 +74,23 @@ void	all_cmd(t_arg *cmd, t_list *export_list, t_list *env_list)
 		my_unset(cmd->arg[1], export_list, env_list);
 	else
 		ft_exu_other(cmd, export_list, env_list);
-	exit (0);
+	exit(0);
 }
 
+void	ft_reead_2(char *str, t_list **export_list, t_list *env_list, char *tmp)
+{
+	tmp = malloc(sizeof(char) * ft_strlen(str) + 1);
+	if (!tmp)
+		return ;
+	ft_strlcpy(tmp, str, ft_strlen(str) + 1);
+	if (ft_parsing(tmp) || token_line(str, *export_list, env_list))
+	{
+		printf("\e[0;31msyntax error\n");
+		g_ext_s = 258;
+	}
+}
 
-void	ft_read(t_list	**export_list, t_list *env_list)
+void	ft_read(t_list **export_list, t_list *env_list)
 {
 	char	*tmp;
 	char	*str;
@@ -79,12 +98,14 @@ void	ft_read(t_list	**export_list, t_list *env_list)
 	tmp = NULL;
 	while (1)
 	{
-		rl_catch_signals = 0;
-		signal(3, sighandler);
-		signal(11, sighandler);
-		signal(2, sighandler);
+		signals();
 		str = readline("\e[0;32mminishell ➜ \e[m");
 		add_history(str);
+		if(!str)
+		{
+			write(1, "exit\n", 6);
+			exit(g_ext_s);
+		}
 		if (parsing(str))
 		{
 			if (str)
@@ -92,41 +113,35 @@ void	ft_read(t_list	**export_list, t_list *env_list)
 			continue ;
 		}
 		if (str)
-		{
-			tmp = malloc(sizeof(char) * ft_strlen(str) + 1);
-			if (!tmp)
-				return ;
-			ft_strlcpy(tmp, str, ft_strlen(str) + 1);
-			if (ft_parsing(tmp) || token_line(str, *export_list, env_list))
-			{
-				printf("\e[0;31msyntax error\n");
-				g_ext_s = 258;
-			}
-			
-		}
+			ft_reead_2(str, export_list, env_list, tmp);
 	}
 	system("leaks minishell");
 }
 
 void	create_env(t_list **env_list, t_list **export_list)
 {
-	static int i = 1;
+	static int	i;
+
+	i = 1;
 	ft_lstadd_back(env_list, ft_lstnew(ft_strjoin("PATH=", _PATH_STDPATH), 1));
 	ft_lstadd_back(env_list, ft_lstnew(ft_strjoin("PWD=", getcwd(NULL, 0)), 1));
 	ft_lstadd_back(env_list, ft_lstnew(ft_strjoin("SHLVL=", ft_itoa(i)), 1));
 	ft_lstadd_back(env_list, ft_lstnew(ft_strjoin("_=", "usr/bin/env"), 1));
-	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("PATH=", _PATH_STDPATH), 1));
-	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("PWD=", getcwd(NULL, 0)), 1));
-	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("SHLVL=", ft_itoa(i++)), 1));
+	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("PATH=", _PATH_STDPATH),
+			1));
+	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("PWD=", getcwd(NULL, 0)),
+			1));
+	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("SHLVL=", ft_itoa(i++)),
+			1));
 	ft_lstadd_back(export_list, ft_lstnew(ft_strjoin("_=", "usr/bin/env"), 1));
 }
 
-
-void	shelvl_env(t_list	*env_list, char **env , int *i)
+void	shelvl_env(t_list *env_list, char **env, int *i)
 {
 	int		a;
 	char	*num;
 	char	*s;
+
 	num = ft_substr(env[*i], 6, ft_strlen(env[*i]));
 	a = ft_atoi(num);
 	if (a < 0)
@@ -138,9 +153,9 @@ void	shelvl_env(t_list	*env_list, char **env , int *i)
 	free(num);
 }
 
-void	ft_env_exp(char **env, t_list	**env_list, t_list	**export_list)
+void	ft_env_exp(char **env, t_list **env_list, t_list **export_list)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	if (!env[0])
@@ -152,7 +167,7 @@ void	ft_env_exp(char **env, t_list	**env_list, t_list	**export_list)
 			if (ft_strncmp(env[i], "SHLVL", 5) == 0)
 				shelvl_env(*env_list, env, &i);
 			else
-				ft_lstadd_back(env_list, ft_lstnew(env[i], 1));
+				ft_lstadd_back(env_list, ft_lstnew(env[i], 0));
 		}
 		i = -1;
 		while (env[++i])
@@ -160,11 +175,11 @@ void	ft_env_exp(char **env, t_list	**env_list, t_list	**export_list)
 			if (ft_strncmp(env[i], "SHLVL", 5) == 0)
 				shelvl_env(*export_list, env, &i);
 			else
-				ft_lstadd_back(export_list, ft_lstnew(env[i], 1));
+				ft_lstadd_back(export_list, ft_lstnew(env[i], 0));
 		}
 	}
-	ft_lstadd_front(export_list, ft_lstnew("__Head", 1));
-	ft_lstadd_front(env_list, ft_lstnew("__Head", 1));
+	ft_lstadd_front(export_list, ft_lstnew("__Head", 0));
+	ft_lstadd_front(env_list, ft_lstnew("__Head", 0));
 }
 
 int	main(int ac, char **av, char *env[])

@@ -28,7 +28,7 @@ char	*export_pars(t_list *export_list, char *var)
 	int	i;
 
 	i = 0;
-	if (!ft_isalpha(var[i]))
+	if (!ft_isalpha(var[i]) && var[i] != '_')
 	{
 		printf("\e[0;31mminishell: export: not a valid identifier\n");
 		g_ext_s = 1;

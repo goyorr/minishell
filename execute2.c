@@ -22,24 +22,18 @@ int	execute_child(t_arg *tmp, int fd[2], int fd2[2], int s)
 			file_d2 = r_inpt(tmp, fd, fd2);
 		file_d = redirect(tmp);
 	}
-	else if ((tmp->next &&  !ft_strncmp(tmp->next->cmd, "<", 2)))
+	else if ((tmp->next && !ft_strncmp(tmp->next->cmd, "<", 2)))
 		file_d = r_inpt(tmp, fd, fd2);
-	else if ((tmp->next &&  !ft_strncmp(tmp->cmd, "<", 2)))
-	{
-		file_d = r_inpt(tmp, fd, fd2);
-		while (tmp->cmd[0] == '<')
-			tmp = tmp->next;
-	}
-	close_file(file_d, fd2);
-	close_file(file_d2, fd);
-	return (1);
+	else if ((tmp->next && !ft_strncmp(tmp->cmd, "<", 2)))
+		file_d = r_inpt2(tmp, fd, fd2);
+	return (close_file(file_d, fd2), close_file(file_d2, fd), 1);
 }
 
 int	execute_parent(t_arg *tmp, int fd[2], int fd2[2], int s)
 {
 	close_file(0, fd2);
 	if (!tmp->next || (tmp->cmd[0] == '|'
-			&& tmp->next->cmd[0] == '>' && !tmp->next->next->next)) //???a
+			&& tmp->next->cmd[0] == '>' && !tmp->next->next->next))
 	{
 		close_file(0, fd2);
 		close_file(0, fd);
@@ -47,9 +41,10 @@ int	execute_parent(t_arg *tmp, int fd[2], int fd2[2], int s)
 	}
 	else
 	{
-		tmp = tmp->next;
-		while (tmp && (tmp->cmd[0] == '>' || tmp->cmd[0] == '<'))
+		while (tmp)
 		{
+			if (tmp->cmd[0] == '|')
+				break ;
 			tmp = tmp->next;
 			if (!tmp)
 			{
@@ -58,6 +53,6 @@ int	execute_parent(t_arg *tmp, int fd[2], int fd2[2], int s)
 				return (close(s), 1);
 			}
 		}
-		return (0);
 	}
+	return (0);
 }

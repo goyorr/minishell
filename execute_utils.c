@@ -48,38 +48,29 @@ int	parent(int file_d, int s, int fd[2])
 	return (s);
 }
 
-void	close_file(int file_d, int fd[2])
+void	check_access(t_arg *tmp)
 {
-	if (file_d)
-		close(file_d);
-	close(fd[1]);
-	close(fd[0]);
+	while (tmp && ft_strncmp(tmp->cmd, "<", 2))
+		tmp = tmp->next;
+	while (tmp && !ft_strncmp(tmp->cmd, "<", 2))
+	{
+		if (access(tmp->redfile, R_OK))
+		{
+			printf ("minishell: No such file or directory\n");
+			exit (0);
+		}
+		tmp = tmp->next;
+	}
 }
-
-
 
 int	execute_hered(t_arg *tmp, int fd[2], int fd2[2])
 {
-	int		file_d = 0;
-	t_arg	*tmp2;
+	int		file_d;
 
-	tmp2 = NULL;
+	file_d = 0;
 	here_doc(tmp, fd2);
 	if (get_next_inptred(tmp))
-	{
-		tmp2 = tmp;
-		while (tmp2 && ft_strncmp(tmp2->cmd, "<", 2))
-			tmp2 = tmp2->next;
-		while (tmp2 && !ft_strncmp(tmp2->cmd, "<", 2))
-		{
-			if (access(tmp2->redfile, R_OK))
-			{
-				printf ("minishell: No such file or directory\n");
-				exit (0);
-			}
-			tmp2 = tmp2->next;
-		}
-	}
+		check_access(tmp);
 	if (ft_strncmp(tmp->cmd, "<<", 3))
 	{
 		if (tmp->next && tmp->next->cmd[0] == '>')

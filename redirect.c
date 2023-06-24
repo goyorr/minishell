@@ -65,6 +65,35 @@ int	redirect_inpt(t_arg *tmp, int fd[2])
 	return (file_d);
 }
 
+int	redirect_firstnpt(t_arg *tmp, int fd[2])
+{
+	int		file_d;
+	t_arg	*tmp2;
+
+	file_d = 0;
+	tmp2 = tmp;
+	if (tmp && !ft_strncmp(tmp->cmd, "<", 2))
+	{
+		if (access(tmp->next->cmd, R_OK))
+			return (-1);
+		tmp = tmp->next;
+		file_d = open(tmp->cmd, O_RDONLY);
+	}
+	while (tmp && tmp->next && !ft_strncmp(tmp->next->cmd, "<", 2))
+	{
+		close (file_d);
+		if (access(tmp->next->redfile, R_OK))
+			return (-1);
+		tmp = tmp->next;
+		if (!tmp && tmp2->next && tmp2->next->arg[1])
+			file_d = open(tmp->redfile, O_RDONLY);
+	}
+	dup2(file_d, STDIN_FILENO);
+	if (tmp->next && !ft_strncmp(tmp->next->cmd, "|", 2))
+		dup2(fd[1], STDOUT_FILENO);
+	return (file_d);
+}
+
 int	parsing(char *str)
 {
 	if (check_line(str))

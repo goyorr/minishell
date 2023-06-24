@@ -56,17 +56,15 @@ void	my_unset(char *cmd, t_list *export_list, t_list *env_list)
 	unset_export(cmd, export_list);
 }
 
-void	add_free2(t_data *data, t_token **token)
+void	add_free2(t_data *data, t_token **token, int *key)
 {
-	static int	key;
-
-	if (key == 1)
+	if (*key == 1)
 	{
-		ft_tokenadd_back(token, new_token(data->str, get_type(data->str), key));
+		ft_tokenadd_back(token, new_token(data->str, get_type(data->str), *key));
 		key = 0;
 	}
 	else
-		ft_tokenadd_back(token, new_token(data->str, get_type(data->str), key));
+		ft_tokenadd_back(token, new_token(data->str, get_type(data->str), *key));
 }
 
 void	add_free(t_data *data, t_token **token, char *line)
@@ -75,7 +73,7 @@ void	add_free(t_data *data, t_token **token, char *line)
 	int			i;
 
 	i = 0;
-	add_free2(data, token);
+	add_free2(data, token, &key);
 	if (!ft_strncmp(data->str, "echo", 4) || get_token_pars(data->str))
 	{
 		i = data->i;
@@ -91,7 +89,7 @@ void	add_free(t_data *data, t_token **token, char *line)
 			}
 		}
 	}
-	free (data->str);
+	free(data->str);
 	data->str = NULL;
 }
 

@@ -26,7 +26,8 @@ void	here_doc4(t_arg *tmp, int fd[2], int i, char **delimiter)
 			if (!ft_strncmp(delimiter[i], input, ft_strlen(input))
 				&& (ft_strlen(input) == ft_strlen(delimiter[i])))
 				break ;
-			if (!tmp->next || (tmp->next && tmp->next->cmd[0] == '|') || (tmp->next && ft_strncmp(tmp->next->cmd, "<<", 3)))
+			if (!tmp->next || (tmp->next && tmp->next->cmd[0] == '|')
+				|| (tmp->next && ft_strncmp(tmp->next->cmd, "<<", 3)))
 				ft_putendl_fd(input, fd[1]);
 			input = readline(">");
 		}
@@ -76,5 +77,5 @@ int	here_doc(t_arg *tmp, int fd[2])
 		file = file->next;
 		tmp = tmp->next;
 	}
- 	return (here_doc2(tmp, fd, file), 0);
+	return (here_doc2(tmp, fd, file), 0);
 }

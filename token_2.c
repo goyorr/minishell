@@ -6,9 +6,10 @@
 /*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 13:10:02 by aaghbal           #+#    #+#             */
-/*   Updated: 2023/06/13 13:36:46 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:59:35 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*get_token(char *line)
@@ -22,7 +23,7 @@ char	*get_token(char *line)
 		&& (line[i + 1] != '<' && line[i + 1] != '>'))
 		return (ft_substr(line, 0, 1));
 	else if (line[i] && ((line[i] == '<' && line[i + 1] == '<')
-				|| (line[i] == '>' && line[i + 1] == '>')))
+			|| (line[i] == '>' && line[i + 1] == '>')))
 		return (ft_substr(line, 0, 2));
 	return (NULL);
 }
@@ -45,11 +46,11 @@ void	tokenization(t_token **tok, t_data *data, t_list *exp_list, char *line)
 			add_free(data, tok, line);
 	}
 }
+
 void	ft_pars_nor(char *line, int *i, int *c)
 {
-
-	if (((line[*i] == '<' && line[*i + 1] == '<') || (line[*i] == '<' 
-	&& line[*i+ 1] == '<')))
+	if (((line[*i] == '<' && line[*i + 1] == '<') || (line[*i] == '<'
+				&& line[*i + 1] == '<')))
 		*c = 0;
 	else if ((line[*i] == '<' || line[*i] == '>' || line[*i] == '|'))
 	{
@@ -74,7 +75,8 @@ int	parsing_3(char *line)
 			i += 2;
 			while (line[i] && (line[i] == ' ' || line[i] == '\t'))
 				i++;
-			if (line[i] == '\"' && line[i + 1] == '\"')
+			if ((line[i] == '\"' && line[i + 1] == '\"') || (line[i] == '\''
+					&& line[i + 1] == '\''))
 			{
 				i += 2;
 				c++;
