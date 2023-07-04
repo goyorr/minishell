@@ -6,9 +6,10 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:04 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/14 08:09:00 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/03 16:09:00 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 void	s_handler(int s)
@@ -54,7 +55,7 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	{
 		while (tmp)
 		{
-			if (tmp->cmd[0] == '|')
+			if (tmp->cmd && tmp->cmd[0] == '|')
 				break ;
 			tmp = tmp->next;
 		}
@@ -64,7 +65,7 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 		wait(0);
 		while (tmp)
 		{
-			if (tmp->cmd[0] == '|')
+			if (tmp->cmd && tmp->cmd[0] == '|')
 				break ;
 			tmp = tmp->next;
 		}
@@ -93,10 +94,10 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 			}
 			tmp = tmp->next;
 		}
-		else if (tmp && (tmp->cmd[0] == '>' || tmp->cmd[0] == '<'))
+		else if (tmp && (tmp->cmd[0] == '>'))
 			tmp = tmp->next;
 		else if (tmp && !ft_strncmp(tmp->cmd, "exit", 5))
-			my_exit(tmp);
+			tmp = my_exit(tmp);
 		else
 			tmp = exe1(tmp, export_list, env_list);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 04:52:09 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/23 12:31:37 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/07/02 22:31:07 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,11 @@ char	*get_key_exp(t_list *exp, char *key);
 void	signals(void);
 void	no_cmd_inpt(t_arg *tmp, t_list *export_list, t_list *env_list);
 int		redirect_firstnpt(t_arg *tmp, int fd[2]);
-int	r_inpt2(t_arg *tmp, int fd[2], int fd2[2]);
+int		r_inpt2(t_arg *tmp, int fd[2], int fd2[2]);
+void	ft_reead_2(char *str, t_list **export_list,
+			t_list *env_list, char *tmp);
+void	ft_increment_s(int *c, int *len, int *on);
+void	ft_increment(char *line, int *c, int *len, int *on);
 
 /*---signals---*/
 void	sighandler(int signal);

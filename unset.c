@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
+/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 07:52:47 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/20 20:28:20 by aaghbal          ###   ########.fr       */
+/*   Updated: 2023/07/02 23:04:06 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,13 @@ void	add_free2(t_data *data, t_token **token, int *key)
 {
 	if (*key == 1)
 	{
-		ft_tokenadd_back(token, new_token(data->str, get_type(data->str), *key));
+		ft_tokenadd_back(token, new_token(data->str,
+				get_type(data->str), *key));
 		key = 0;
 	}
 	else
-		ft_tokenadd_back(token, new_token(data->str, get_type(data->str), *key));
+		ft_tokenadd_back(token, new_token(data->str,
+				get_type(data->str), *key));
 }
 
 void	add_free(t_data *data, t_token **token, char *line)

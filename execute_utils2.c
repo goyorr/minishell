@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_utils2.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/07/02 10:13:21 by zel-kach          #+#    #+#             */
+/*   Updated: 2023/07/02 22:07:42 by zel-kach         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	current_pipe(t_arg *tmp, int fd[2], int fd2[2], int s)
@@ -65,30 +77,12 @@ t_arg	*if_export(t_arg *tmp, t_list *export_list, t_list *env_list)
 	int	i;
 
 	i = 0;
-	if (tmp && tmp->next && tmp->next->cmd[0] == '|')
+	if (tmp->next && tmp->next->cmd[0] == '|')
 		tmp = tmp->next;
 	else if (tmp)
 	{
 		while (tmp && tmp->arg[++i])
 			my_export(export_list, env_list, tmp->arg[i]);
-		if (!tmp->next)
-			return (NULL);
-		tmp = tmp->next;
-	}
-	return (tmp);
-}
-
-t_arg	*if_unset(t_arg *tmp, t_list *export_list, t_list *env_list)
-{
-	int	i;
-
-	i = 0;
-	if (tmp->next && tmp->next->cmd[0] == '|')
-		tmp = tmp->next;
-	else
-	{
-		while (tmp->arg[++i])
-			my_unset(tmp->arg[i], env_list, export_list);
 		if (!tmp->next)
 			return (NULL);
 		tmp = tmp->next;

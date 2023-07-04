@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 08:51:53 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/06/14 08:51:54 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/03 15:43:52 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	check_access(t_arg *tmp)
 		if (access(tmp->redfile, R_OK))
 		{
 			printf ("minishell: No such file or directory\n");
-			exit (0);
+			exit (1);
 		}
 		tmp = tmp->next;
 	}
