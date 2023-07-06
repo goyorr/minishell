@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 04:52:16 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/05/14 04:52:17 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/04 15:48:48 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "minishell.h"
 
 void	sighandler(int signal)
@@ -38,7 +39,7 @@ t_token	*new_token(char *cmd, t_type type, int k)
 
 	node = (t_token *)malloc(sizeof(t_token));
 	if (node == NULL)
-		return (NULL);
+		exit(0);
 	node->cmd = ft_strdup(cmd);
 	node->key = k;
 	if (type == NONE)
@@ -53,6 +54,8 @@ t_arg	*newarg_token(char *cmd, t_type type)
 	t_arg	*node;
 
 	node = (t_arg *)malloc(sizeof(t_arg));
+	if (!node)
+		exit(0);
 	node->cmd = ft_strdup(cmd);
 	node->arg = alloc_arg(NULL, cmd);
 	node->type = type;

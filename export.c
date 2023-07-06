@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 04:51:58 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/02 22:40:06 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/06 15:37:13 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	export_empty(t_list *export_list, t_list *env_list, char *var)
 	int		i;
 	char	*tmp;
 
-	i = 0;
+	i = -1;
 	tmp = ft_strdup(var);
 	while (var[++i])
 	{
@@ -130,6 +130,11 @@ void	my_export(t_list *export_list, t_list *env_list, char *var)
 		export_empty(export_list, env_list, tmp);
 		if (var != tmp)
 			free (tmp);
+		while (export_list)
+		{
+			printf("%s\n", export_list->content);
+			export_list = export_list->next;
+		}
 		return ;
 	}
 	else

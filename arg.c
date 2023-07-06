@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 13:32:27 by aaghbal           #+#    #+#             */
-/*   Updated: 2023/07/04 13:56:28 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/05 18:36:23 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	append_word(t_token **tmp, t_arg **arg)
 {
 	t_arg	*tmp2;
 
-	while (((*tmp) && ((*tmp)->type == tokenword || (*tmp)->key == 1)))
+	while (((*tmp) && ((*tmp)->type == tokenword || (*tmp)->key == 1)) && *arg)
 	{
 		tmp2 = ft_arglast(*arg);
 		tmp2->arg = alloc_arg(tmp2->arg, (*tmp)->cmd);
@@ -46,7 +46,6 @@ void	append_word_2(char **tmp, t_arg **arg)
 	t_arg	*tmp2;
 
 	i = 1;
-	printf("! = %s\n", tmp[i]);
 	while (tmp[i])
 	{
 		tmp2 = ft_arglast(*arg);
@@ -81,23 +80,8 @@ void	is_arg(t_token *tmp, t_arg **arg)
 	while (tmp)
 	{
 		tmp2 = ft_split(tmp->cmd, ' ');
-		if (tmp2[1] && ft_strncmp(tmp->cmd, "echo", 5))
-		{
-			ft_argadd_back(arg, newarg_token(tmp2[0], (tmp)->type));
-			append_word_2(tmp2, arg);
-			tmp = tmp->next;
-		}
-		else if (tmp->type == tokenword || tmp->key == 1)
-		{
-			if ((tmp && tmp->type == tokenword) || tmp->key == 1)
-			{
-				ft_argadd_back(arg, newarg_token((tmp)->cmd, (tmp)->type));
-				(tmp) = (tmp)->next;
-				append_word(&tmp, arg);
-			}
-			if (tmp && tmp->type == redirections && tmp->key == 0)
-				apend_redirection(&tmp, arg);
-		}
+		if (tmp->type == tokenword || tmp->key == 1)
+			is_tokkenword(&tmp, arg);
 		else
 		{
 			if (tmp)

@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:09:39 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/02 10:13:40 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/06 10:54:36 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ char	**alloc(t_arg *file)
 		file = file->next;
 	}
 	delem = malloc(sizeof(char *) * i + 1);
+	if (!delem)
+		exit(0);
 	return (delem);
 }
 
@@ -33,7 +35,7 @@ int	hered_check(t_arg *tmp)
 {
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->cmd, "<<", 3))
+		if (!ft_strncmp(tmp->cmd, "<<", 3) && tmp->redfile)
 			return (1);
 		tmp = tmp->next;
 	}

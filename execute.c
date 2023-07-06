@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:04 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/03 16:09:00 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/06 14:13:52 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,13 @@ void	execute1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	pid = fork();
 	if (pid == -1)
 		perror("Error");
-	signal(3, sighandler_child);
 	signal(2, sighandler_child);
 	if (pid == 0)
 	{
 		execute_child(tmp, fd, fd2, s);
 		if (s)
 			s_handler(s);
-		if (tmp->cmd[0] == '<')
+		if (!ft_strncmp(tmp->cmd, "<", 2) || (!ft_strncmp(tmp->cmd, "<<", 3) && tmp->redfile))
 			no_cmd_inpt(tmp, export_list, env_list);
 		all_cmd(tmp, export_list, env_list);
 	}
@@ -77,8 +76,22 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 
 void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 {
+	// while (tmp)
+	// {
+	// 	printf("cmd = %s\n", tmp->cmd);
+	// 	printf("0 = %s\n", tmp->arg[0]);
+	// 	printf("1 = %s\n", tmp->arg[1]);
+	// 	printf("red = %s\n", tmp->redfile);
+	// 	tmp = tmp->next;
+	// }
+	if (tmp && !ft_strncmp(tmp->cmd, "exit", 5))
+			tmp = my_exit(tmp);
 	if (tmp && tmp->cmd[0] == '>')
+	{
 		tmp = first_redirect(tmp);
+		tmp->cmd = ft_strdup(tmp->arg[1]);
+		tmp->arg[1] = NULL;
+	}
 	if (tmp && !ft_strncmp(tmp->cmd, "<", 2))
 		tmp = exe1(tmp, export_list, env_list);
 	while (tmp)
@@ -97,7 +110,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 		else if (tmp && (tmp->cmd[0] == '>'))
 			tmp = tmp->next;
 		else if (tmp && !ft_strncmp(tmp->cmd, "exit", 5))
-			tmp = my_exit(tmp);
+			tmp = tmp->next;
 		else
 			tmp = exe1(tmp, export_list, env_list);
 	}

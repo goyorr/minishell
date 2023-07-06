@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/09 13:10:02 by aaghbal           #+#    #+#             */
-/*   Updated: 2023/07/03 12:15:41 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/05 19:47:32 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,12 @@ char	*get_token(char *line)
 
 void	tokenization(t_token **tok, t_data *data, t_list *exp_list, char *line)
 {
+	int	c;
+
+	c = 0;
 	while (line[data->i])
 	{
+		c = data->i;
 		while (line[(data->i)] == ' ' || line[(data->i)] == '\t')
 			(data->i)++;
 		if (check_token(line[data->i]))
@@ -43,7 +47,7 @@ void	tokenization(t_token **tok, t_data *data, t_list *exp_list, char *line)
 		else
 			default_cmd(data, line, exp_list);
 		if (data->str)
-			add_free(data, tok, line);
+			add_free(data, tok, line, &c);
 	}
 }
 
@@ -96,6 +100,8 @@ int	token_line(char *line, t_list *export_list, t_list *env_list)
 	t_token	*token;
 
 	data = malloc(sizeof(t_data));
+	if (!data)
+		exit(0);
 	arg = NULL;
 	token = NULL;
 	data->i = 0;
