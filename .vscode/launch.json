@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/zel-kach/Desktop/new",
-      "program": "/Users/zel-kach/Desktop/new/build/Debug/outDebug"
+      "cwd": "/Users/zel-kach/Desktop/minishell",
+      "program": "/Users/zel-kach/Desktop/minishell/build/Debug/outDebug"
     }
   ]
 }

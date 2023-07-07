@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:04 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/07 08:53:24 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/07 11:52:43 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,11 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	if (tmp && get_next_red(tmp) > 1)
 		multi_red(tmp);
 	execute1(tmp, export_list, env_list);
-	if (tmp->cmd[0] == '<')
+	if (!ft_strncmp(tmp->cmd, "<", 2))
 	{
 		while (tmp)
 		{
-			if (tmp->cmd && tmp->cmd[0] == '|')
+			if (tmp->cmd && (tmp->cmd[0] == '|' || !ft_strncmp(tmp->cmd, "<<", 3)))
 				break ;
 			tmp = tmp->next;
 		}

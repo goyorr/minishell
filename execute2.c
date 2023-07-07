@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 10:13:06 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/07 09:02:00 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/07 11:29:17 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	execute_child_2(t_arg *tmp, int fd[2], int fd2[2], int s)
 		s = current_pipe(tmp, fd, fd2, s);
 		exit (0);
 	}
-	return (1);
+	return (0);
 }
 
 int	execute_child(t_arg *tmp, int fd[2], int fd2[2], int s)
@@ -46,7 +46,8 @@ int	execute_child(t_arg *tmp, int fd[2], int fd2[2], int s)
 
 	file_d = 0;
 	file_d2 = 0;
-	return (execute_child_2(tmp, fd, fd2, s));
+	if (execute_child_2(tmp, fd, fd2, s))
+		return (1);
 	if (tmp && tmp->next && tmp->next->cmd[0] == '|')
 		dup2(fd[1], STDOUT_FILENO);
 	else if ((tmp->next && tmp->next->cmd[0] == '>'))
