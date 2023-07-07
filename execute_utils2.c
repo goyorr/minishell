@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 10:13:21 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/06 12:02:19 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/07 09:02:59 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,23 @@ t_arg	*first_redirect(t_arg *tmp)
 {
 	int	file_d;
 
-	if (!ft_strncmp(tmp->cmd, ">>", 3))
-		file_d = open(tmp->next->cmd, O_CREAT | O_APPEND | O_RDWR, 0644);
-	else
+	if (tmp->cmd[1] == '\0')
 		file_d = open(tmp->next->cmd, O_CREAT | O_TRUNC | O_RDWR, 0644);
-	tmp = tmp->next;
+	else
+		file_d = open(tmp->next->cmd, O_CREAT | O_APPEND | O_RDWR, 0644);
 	close (file_d);
-	return (tmp);
+	tmp = tmp->next;
+	while (tmp->next && !ft_strncmp(tmp->next->cmd, ">", 2))
+	{
+		close (file_d);
+		if (tmp->next->cmd[1] == '\0')
+			file_d = open(tmp->next->redfile, O_CREAT | O_TRUNC | O_RDWR, 0644);
+		else
+			file_d = open(tmp->next->redfile, O_CREAT
+					| O_APPEND | O_RDWR, 0644);
+		tmp = tmp->next;
+	}
+	return (tmp->next);
 }
 
 t_arg	*if_export(t_arg *tmp, t_list *export_list, t_list *env_list)

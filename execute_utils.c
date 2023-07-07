@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 08:51:53 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/06 13:56:50 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/07 07:21:12 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,10 @@ int	execute_hered(t_arg *tmp, int fd[2], int fd2[2])
 	here_doc(tmp, fd2);
 	if (get_next_inptred(tmp))
 		check_access(tmp);
-	if (ft_strncmp(tmp->cmd, "<<", 3))
-	{
-		if (tmp->next && tmp->next->cmd[0] == '>')
-			file_d = redirect(tmp);
-	}
+	if (tmp->next && tmp->next->cmd[0] == '>')
+		file_d = redirect(tmp);
+	else if (get_next_pip(tmp))
+		dup2(fd[1], STDOUT_FILENO);
 	dup2(fd2[0], STDIN_FILENO);
 	close_file(file_d, fd2);
 	close_file(file_d, fd);

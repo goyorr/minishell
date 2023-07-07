@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:09 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/06 11:39:23 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/07 09:05:37 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,19 @@ int	redirect(t_arg *tmp)
 
 int	redirect2(t_arg *tmp)
 {
-	int	file_d = 0;
+	int	file_d;
 
+	file_d = 0;
 	if (tmp->next->next && !ft_strncmp(tmp->next->next->cmd, ">>", 3))
 	{
-		file_d = open(tmp->next->next->redfile, O_CREAT | O_RDWR | O_APPEND, 0644);
+		file_d = open(tmp->next->next->redfile, O_CREAT
+				| O_RDWR | O_APPEND, 0644);
 		dup2(file_d, STDOUT_FILENO);
 	}
 	else if (tmp->next->next && !ft_strncmp(tmp->next->next->cmd, ">", 2))
 	{
-		file_d = open(tmp->next->next->redfile, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		file_d = open(tmp->next->next->redfile, O_CREAT
+				| O_RDWR | O_TRUNC, 0644);
 		dup2(file_d, STDOUT_FILENO);
 	}
 	return (file_d);
@@ -102,13 +105,16 @@ int	redirect_firstnpt(t_arg *tmp, int fd[2])
 		}
 	}
 	tmp = tmp->next->next;
-	while (tmp && !ft_strncmp(tmp->cmd, "<", 2))
+	if (tmp)
 	{
 		close (file_d);
-		if (access(tmp->redfile, R_OK))
-			return (-1);
 		file_d = open(tmp->redfile, O_RDONLY);
 		dup2(file_d, STDIN_FILENO);
+	}
+	while (tmp && !ft_strncmp(tmp->cmd, "<", 2))
+	{
+		if (access(tmp->redfile, R_OK))
+			return (-1);
 		if (!tmp->next && tmp2)
 		{
 			if (!tmp2->cmd[1])
@@ -121,17 +127,4 @@ int	redirect_firstnpt(t_arg *tmp, int fd[2])
 	if (tmp && !ft_strncmp(tmp->cmd, "|", 2))
 		dup2(fd[1], STDOUT_FILENO);
 	return (file_d);
-}
-
-int	parsing(char *str)
-{
-	if (check_line(str))
-		return (1);
-	if (check_line_2(str))
-	{
-		printf("\e[0;31msyntax error\n");
-		g_ext_s = 127;
-		return (1);
-	}
-	return (0);
 }
