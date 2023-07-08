@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aaghbal <aaghbal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:09:39 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/06 17:46:36 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/07 12:22:26 by aaghbal          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	hered_check(t_arg *tmp)
 	{
 		if (!ft_strncmp(tmp->cmd, "|", 2))
 			return (0);
-		if (!ft_strncmp(tmp->cmd, "<<", 3) && tmp->redfile)
+		if (!ft_strncmp(tmp->cmd, "<<", 3) && tmp->key == 0)
 			return (1);
 		tmp = tmp->next;
 	}

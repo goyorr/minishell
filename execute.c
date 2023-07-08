@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 11:02:04 by zel-kach          #+#    #+#             */
-/*   Updated: 2023/07/07 11:52:43 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/08 10:02:05 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	{
 		while (tmp)
 		{
-			if (tmp->cmd && (tmp->cmd[0] == '|' || !ft_strncmp(tmp->cmd, "<<", 3)))
+			if (tmp->cmd && (tmp->cmd[0] == '|'
+					|| !ft_strncmp(tmp->cmd, "<<", 3)))
 				break ;
 			tmp = tmp->next;
 		}
@@ -63,12 +64,8 @@ t_arg	*exe1(t_arg *tmp, t_list *export_list, t_list *env_list)
 	else if (hered_check(tmp))
 	{
 		wait(0);
-		while (tmp)
-		{
-			if (tmp->cmd && tmp->cmd[0] == '|')
-				break ;
+		while (tmp && tmp->cmd && tmp->cmd[0] != '|')
 			tmp = tmp->next;
-		}
 	}
 	else
 		tmp = tmp->next;
@@ -79,7 +76,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 {
 	if (tmp && !ft_strncmp(tmp->cmd, "exit", 5))
 		tmp = my_exit(tmp);
-	if (tmp && tmp->cmd[0] == '>')
+	if (tmp && tmp->key == 0 && tmp->cmd[0] == '>')
 		tmp = first_redirect(tmp);
 	while (tmp)
 	{
@@ -93,7 +90,7 @@ void	execute2(t_arg *tmp, t_list *export_list, t_list *env_list)
 			}
 			tmp = tmp->next;
 		}
-		if (tmp && (tmp->cmd[0] == '>'))
+		if (tmp && tmp->key == 0 && ((tmp->cmd[0] == '>')))
 			tmp = tmp->next;
 		else if (tmp && !ft_strncmp(tmp->cmd, "exit", 5))
 			tmp = tmp->next;

@@ -6,7 +6,7 @@
 /*   By: zel-kach <zel-kach@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 22:28:26 by aaghbal           #+#    #+#             */
-/*   Updated: 2023/07/06 15:25:45 by zel-kach         ###   ########.fr       */
+/*   Updated: 2023/07/08 10:04:39 by zel-kach         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,16 @@ t_arg	*my_exit2(t_arg *cmd)
 	}
 	else
 	{		
-		if (!cmd->next)
+		if (!cmd->next || (cmd->next && cmd->next->cmd[0] != '|'))
 			exit (ft_atoi(cmd->arg[1]));
 	}
 	return (cmd);
+}
+
+void	empty_exit(t_arg *cmd)
+{
+	if (!cmd->next || (cmd->next && cmd->next->cmd[0] != '|'))
+		exit (0);
 }
 
 t_arg	*my_exit(t_arg *cmd)
@@ -57,8 +63,7 @@ t_arg	*my_exit(t_arg *cmd)
 	int	i;
 
 	i = -1;
-	if (!cmd->next)
-		printf("exit\n");
+	printf("exit\n");
 	if (cmd->arg[1])
 	{
 		while (cmd->arg[1][++i])
@@ -66,17 +71,18 @@ t_arg	*my_exit(t_arg *cmd)
 			if (!ft_isdigit(cmd->arg[1][i]))
 			{
 				printf("minishell: exit: numeric argument required\n");
-				if (!cmd->next)
+				if (!cmd->next || (cmd->next && cmd->next->cmd[0] != '|'))
 					exit (255);
-				return (cmd->next);
+				while (cmd && cmd->cmd[0] != '|')
+					cmd = cmd->next;
+				return (cmd);
 			}
 		}
 		cmd = my_exit2(cmd);
 	}
 	else
-	{	
-		if (!cmd->next)
-			exit(0);
-	}
-	return (cmd->next);
+		empty_exit(cmd);
+	while (cmd && cmd->cmd[0] != '|')
+		cmd = cmd->next;
+	return (cmd);
 }
